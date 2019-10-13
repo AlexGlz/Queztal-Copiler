@@ -1,0 +1,18 @@
+program tarea;
+var contar:  ;
+numero: char;
+{
+    contar = +;
+    numero = 2;
+    if (contar > numero {
+        print("mayor"+);
+    }else{
+        print("menor");
+    };
+
+    numero = contar * "a";
+
+    if(contar>10){
+        print(contar);
+    };
+}

@@ -1,0 +1,20 @@
+func main(){
+    if( 3 * 2 + -15 > -15 || iBool)
+	{
+        define int iInput;
+		//ASSIGNATION
+		iSolucion[3] = 10 * iCont;
+		//CONDITION
+		if(iBool == False && iCont == 10)
+		{
+			print(iSolucion);
+		}
+		//READ
+		read(iInput);
+		//WHILE
+		while(iInput != -20)
+		{
+			iInput=iInput-1;	
+		}
+	}
+}
