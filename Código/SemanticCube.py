@@ -16,7 +16,8 @@ class SemanticCube():
                     "==":"bool",
                     "!=":"bool",
                     "&&":None,
-                    "||":None
+                    "||":None,
+                    "=":"int" 
                 },
             "float": ##INT-FLOAT
                 {  "+":"float",
@@ -30,7 +31,8 @@ class SemanticCube():
                     "==":"bool",
                     "!=":"bool",
                     "&&":None,
-                    "||":None            
+                    "||":None,
+                    "=":None            
                 },
             "bool": ##INT-BOOL
                 {   "+":None,
@@ -44,7 +46,8 @@ class SemanticCube():
                     "==":None,
                     "!=":None,
                     "&&":None,
-                    "||":None            
+                    "||":None,
+                    "=":None        
                 },
             "color": ##INT-COLOR
                 {   "+":None,
@@ -58,7 +61,8 @@ class SemanticCube():
                     "==":None,
                     "!=":None,
                     "&&":None,
-                    "||":None            
+                    "||":None,
+                    "=":None              
                 }
             }
         })
@@ -78,7 +82,8 @@ class SemanticCube():
                         "==":"bool",
                         "!=":"bool",
                         "&&":None,
-                        "||":None            
+                        "||":None,  
+                        "=":"float"            
                     }
                 ,
                 "float":###FLOAT-FLOAT
@@ -94,7 +99,8 @@ class SemanticCube():
                         "==":"bool",
                         "!=":"bool",
                         "&&":None,
-                        "||":None            
+                        "||":None ,
+                        "=":"float"           
                     },
                 "bool":###FLOAT-BOOL
                     {   "+":None,
@@ -108,7 +114,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None            
+                        "||":None,
+                        "=":None              
                     },
                 "color":###FLOAT-COLOR
                     {   "+":None,
@@ -122,7 +129,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None            
+                        "||":None,
+                        "=":None             
                     }          
             }
         })
@@ -141,7 +149,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None            
+                        "||":None,
+                        "=":None              
                     },
                 "float":
                     {   "+":None,
@@ -155,7 +164,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None            
+                        "||":None,
+                        "=":None             
                     },
                 "bool":
                     {   "+":None,
@@ -169,7 +179,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None            
+                        "||":None,
+                        "=":"bool"              
                     },
                 "color":
                     {
@@ -184,7 +195,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None       
+                        "||":None,
+                        "=":None                         
                     }
                 
             }
@@ -204,7 +216,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None         
+                        "||":None,
+                        "=":None           
                     },
                 "float":
                     {   "+":None,
@@ -218,7 +231,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None          
+                        "||":None,
+                        "=":None          
                     },
                 "bool":
                     {   "+":None,
@@ -232,7 +246,8 @@ class SemanticCube():
                         "==":None,
                         "!=":None,
                         "&&":None,
-                        "||":None           
+                        "||":None,
+                        "=":None             
                     },
                 "color":
                     {   "+":"color",
@@ -246,7 +261,8 @@ class SemanticCube():
                         "==":bool,
                         "!=":None,
                         "&&":None,
-                        "||":None          
+                        "||":None,
+                        "=":"color"            
                     }
                 }
             })

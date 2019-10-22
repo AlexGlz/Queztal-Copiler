@@ -1,28 +1,49 @@
 grammar Quetzal;
- 
+
+@header{
+from build.intermediateCode import *
+} 
+
 /* Parser Rules */
-program: variables* function* main;
-main: TK_FUNC TK_MAIN SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
-variables: TK_DEFINE types TYPE_ID (SYM_ASSIGN expression)? (SYM_COMMA TYPE_ID (SYM_ASSIGN expression)?)* SYM_SEMI_COL;
-function: TK_FUNC (types | TK_VOID) TYPE_ID SYM_PAREN_OPEN (types TYPE_ID (SYM_COMMA types TYPE_ID)*)? SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
+program: variables* function* main{stack.printQuads()};
+main: TK_FUNC{namesTable.addFunction("main","void")} TK_MAIN{namesTable.initLocalT()} SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
+variables: TK_DEFINE types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)} ({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})? (SYM_COMMA TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)}({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})?)* SYM_SEMI_COL;
+function: TK_FUNC{namesTable.initLocalT()} (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text)})  SYM_PAREN_OPEN (types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)} (SYM_COMMA types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)})*)? SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
 block: SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
 types: (TK_INT | TK_FLOAT | TK_COLOR | TK_BOOL) (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*;
-constants:(TYPE_INT | TYPE_FLOAT | CTE_TAG | TYPE_BOOL | TYPE_COLOR);
+constants: (TYPE_INT {stack.addType("int")}
+    | TYPE_FLOAT {stack.addType("float")}
+    | CTE_TAG {stack.addType("tag")}
+    | TYPE_BOOL {stack.addType("bool")}
+    | TYPE_COLOR{stack.addType("color")});
+
+prints: TK_PRINT SYM_PAREN_OPEN{stack.addOp('(')} expression{stack.generatePrint()} (SYM_COMMA expression{stack.generatePrint()})* SYM_PAREN_CLOSE{stack.removeP()} SYM_SEMI_COL; 
+read: TK_READ SYM_PAREN_OPEN TYPE_ID{stack.addOperand($TYPE_ID.text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE(SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*)? SYM_PAREN_CLOSE{stack.generateRead()} SYM_SEMI_COL;
+
 statute: returning|condition|loop|prints|read|callfunc|specfunct|assignation;
-assignation: TYPE_ID (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN (specfunct|(expression SYM_SEMI_COL));
-condition: TK_IF SYM_PAREN_OPEN expression SYM_PAREN_CLOSE block (TK_ELSE block)?;
-prints: TK_PRINT SYM_PAREN_OPEN expression SYM_PAREN_CLOSE SYM_SEMI_COL;
-var_cte: constants
-   | TYPE_ID (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*
-   | TYPE_ID SYM_PAREN_OPEN expression (SYM_COMMA expression)* SYM_PAREN_CLOSE;
-expression: exp (logic_op exp)? ((SYM_OR | SYM_AND) exp (logic_op exp)?)*;
-exp:  term  ((SYM_PLUS | SYM_MINUS) term)*;
-term:  factor (( SYM_MULT |  SYM_DIV ) factor)*;
-factor:  (SYM_PAREN_OPEN expression SYM_PAREN_CLOSE ) | ( (SYM_PLUS|SYM_MINUS)? var_cte );
-logic_op: SYM_EQUAL | SYM_GRE_THAN | SYM_LOW_THAN | SYM_NOT_EQUAL | SYM_GRE_EQ | SYM_LOW_EQ;
+assignation: TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN{stack.addOp('=')} (specfunct|(expression SYM_SEMI_COL)){stack.exitAssign()};
+condition: 
+    TK_IF SYM_PAREN_OPEN {stack.addOp('(')} 
+    expression 
+    SYM_PAREN_CLOSE
+    {stack.removeP()
+stack.enterCondition()} 
+    block (TK_ELSE{stack.enterElse()} block)? {stack.exitCondition()};
+
+var_cte: constants{stack.addConstant($text)}
+   | TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*
+   | TYPE_ID SYM_PAREN_OPEN{stack.addOp('(')} expression (SYM_COMMA expression)* SYM_PAREN_CLOSE;
+
+//EXPRESIONES->EXP->TERM->FACTOR
+expression:  expLogic{stack.exitExpLogic()}((SYM_OR{stack.addOp('||')} | SYM_AND{stack.addOp('&&')}) expLogic{stack.exitExpLogic()})*;
+expLogic: exp{stack.exitExp()} (logic_op{stack.addOp($logic_op.text)} exp{stack.exitExp()})?;
+exp:  term{stack.exitTerm()}  ((SYM_PLUS{stack.addOp('+')} | SYM_MINUS{stack.addOp('-')}) term{stack.exitTerm()})*;
+term:  factor{stack.exitFactor()} (( SYM_MULT{stack.addOp('*')} |  SYM_DIV{stack.addOp('/')} ) factor{stack.exitFactor()})*;
+factor:  (SYM_PAREN_OPEN{stack.addOp('(')} expression SYM_PAREN_CLOSE{stack.removeP()} ) | ( (SYM_PLUS|SYM_MINUS)? var_cte );
+
+logic_op: SYM_EQUAL| SYM_GRE_THAN | SYM_LOW_THAN| SYM_NOT_EQUAL | SYM_GRE_EQ | SYM_LOW_EQ;
  
-read: TK_READ SYM_PAREN_OPEN TYPE_ID (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE(SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)?)? SYM_PAREN_CLOSE SYM_SEMI_COL;
- 
+
 returning: TK_RETURN expression? SYM_SEMI_COL;
 callfunc: TYPE_ID SYM_PAREN_OPEN (expression (SYM_COMMA expression)*)? SYM_PAREN_CLOSE SYM_SEMI_COL;
  
@@ -56,7 +77,7 @@ TK_RETURN: 'return';
 TK_IF: 'if';
 TK_ELSE: 'else';    
 TK_WHILE: 'while';
-TK_PRINT: 'prints';
+TK_PRINT: 'print';
 TK_READ: 'read';
 fragment TK_TRUE: 'True';
 fragment TK_FALSE: 'False';
@@ -131,16 +152,16 @@ SYM_DIV: '/';
  
  
 /* TYPES */
-TYPE_FLOAT : FRAG_DIGIT+ ('.' FRAG_DIGIT+)?;
+TYPE_FLOAT : FRAG_DIGIT+ ('.' FRAG_DIGIT+);
 TYPE_INT : FRAG_DIGIT+;
 TYPE_ID : FRAG_LOWER_CASE FRAG_FOLLOW*;
 TYPE_COLOR : CTE_COLOR | FRAG_HEX_COLOR;
-CTE_TAG: '"' (FRAG_FOLLOW|' ')* '"';
+CTE_TAG: '"' (FRAG_FOLLOW|' ' | '/')* '"';
 TYPE_BOOL: TK_TRUE | TK_FALSE;
  
 /* FRAGMENTS */
 fragment FRAG_LETTER: FRAG_UPPER_CASE | FRAG_LOWER_CASE;
-fragment FRAG_FOLLOW: FRAG_LETTER|FRAG_DIGIT|SYM_UNDER_SCORE|'/'|':'|'.'|'\\';
+fragment FRAG_FOLLOW: FRAG_LETTER|FRAG_DIGIT|SYM_UNDER_SCORE|':'|'.'|'\\';
 fragment FRAG_DIGIT : [0-9];
 fragment FRAG_UPPER_CASE: [A-Z];
 fragment FRAG_LOWER_CASE: [a-z];

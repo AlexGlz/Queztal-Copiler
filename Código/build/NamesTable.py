@@ -20,14 +20,23 @@ class NamesTable():
             self.actualT[newVar] = type #add function to local actualT
             return True
 
-    def addGlobalVar(self,newVar,type): #function to register a neW Global Variable
-        if (newVar in self.globalsT or newVar in self.functionsT): #checks if name of is not already defined in global context or as a name of a function
-            raise Exception("Variable '" + newVar + "' already defined") #display exception
+    def addGlobalVar(self,newVar,type):
+#function to register a ne
+        if (newVar in self.globalsT or newVar in self.functionsT):
+            raise Exception("Variable '" + newVar + "' already defined")
         else:
-            self.globalsT[newVar] = type #add function to global globalsT
+            self.globalsT[newVar] = type
             return True
 
+    #Identifica el contexto actual de la creación de variables, posteriormente guarda la variable como local
+    #o global según sea el caso
+    def addVar(self,newVar,type):
+        if self.actualT == None:
+            self.addGlobalVar(newVar,type)
+        else:
+            self.addLocalVar(newVar,type)
+
     #Inicializa la tabla de variables locales
-    def clearLocalT(self):
+    def initLocalT(self):
         self.actualT = dict()
 

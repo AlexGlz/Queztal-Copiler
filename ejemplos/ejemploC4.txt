@@ -1,0 +1,14 @@
+define float x,y,z;
+
+func int loquesea(int n, int m){
+    define int a;
+    a = m+1;
+    if(a>m){
+        print(a);
+    }
+    x= y*z;
+}
+
+func main(){
+    
+}

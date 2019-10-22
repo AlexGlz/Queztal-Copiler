@@ -8,7 +8,7 @@ func int sumar(int x, float y){
 }
 
 func void restar(float a, int b){
-    return x-y;
+    return a-b;
 }
 
 func void noHaceNada(){
@@ -17,5 +17,5 @@ func void noHaceNada(){
 
 func main(){
     define int iResult;
-    iResult = sumar(1+2);
+    print(1+2
 }

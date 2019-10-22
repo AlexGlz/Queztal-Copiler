@@ -5,6 +5,9 @@ if __name__ is not None and "." in __name__:
 else:
     from QuetzalParser import QuetzalParser
 
+from build.intermediateCode import *
+
+
 # This class defines a complete listener for a parse tree produced by QuetzalParser.
 class QuetzalListener(ParseTreeListener):
 
@@ -71,6 +74,24 @@ class QuetzalListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by QuetzalParser#prints.
+    def enterPrints(self, ctx:QuetzalParser.PrintsContext):
+        pass
+
+    # Exit a parse tree produced by QuetzalParser#prints.
+    def exitPrints(self, ctx:QuetzalParser.PrintsContext):
+        pass
+
+
+    # Enter a parse tree produced by QuetzalParser#read.
+    def enterRead(self, ctx:QuetzalParser.ReadContext):
+        pass
+
+    # Exit a parse tree produced by QuetzalParser#read.
+    def exitRead(self, ctx:QuetzalParser.ReadContext):
+        pass
+
+
     # Enter a parse tree produced by QuetzalParser#statute.
     def enterStatute(self, ctx:QuetzalParser.StatuteContext):
         pass
@@ -98,15 +119,6 @@ class QuetzalListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by QuetzalParser#prints.
-    def enterPrints(self, ctx:QuetzalParser.PrintsContext):
-        pass
-
-    # Exit a parse tree produced by QuetzalParser#prints.
-    def exitPrints(self, ctx:QuetzalParser.PrintsContext):
-        pass
-
-
     # Enter a parse tree produced by QuetzalParser#var_cte.
     def enterVar_cte(self, ctx:QuetzalParser.Var_cteContext):
         pass
@@ -122,6 +134,15 @@ class QuetzalListener(ParseTreeListener):
 
     # Exit a parse tree produced by QuetzalParser#expression.
     def exitExpression(self, ctx:QuetzalParser.ExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by QuetzalParser#expLogic.
+    def enterExpLogic(self, ctx:QuetzalParser.ExpLogicContext):
+        pass
+
+    # Exit a parse tree produced by QuetzalParser#expLogic.
+    def exitExpLogic(self, ctx:QuetzalParser.ExpLogicContext):
         pass
 
 
@@ -158,15 +179,6 @@ class QuetzalListener(ParseTreeListener):
 
     # Exit a parse tree produced by QuetzalParser#logic_op.
     def exitLogic_op(self, ctx:QuetzalParser.Logic_opContext):
-        pass
-
-
-    # Enter a parse tree produced by QuetzalParser#read.
-    def enterRead(self, ctx:QuetzalParser.ReadContext):
-        pass
-
-    # Exit a parse tree produced by QuetzalParser#read.
-    def exitRead(self, ctx:QuetzalParser.ReadContext):
         pass
 
 

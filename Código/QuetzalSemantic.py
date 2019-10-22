@@ -1,4 +1,5 @@
 from build.QuetzalParser import QuetzalParser
+from build.QuetzalParser import stack
 from build.QuetzalListener import QuetzalListener
 from NamesTable import NamesTable
 
@@ -13,6 +14,7 @@ class QuetzalSemantic(QuetzalListener):
     # Exit a parse tree produced by QuetzalParser#program.
     def exitProgram(self, ctx:QuetzalParser.ProgramContext):
         pass
+        
 
      # Enter a parse tree produced by QuetzalParser#main.
     def enterMain(self, ctx:QuetzalParser.MainContext):
@@ -73,7 +75,45 @@ class QuetzalSemantic(QuetzalListener):
 
     # Exit a parse tree produced by QuetzalParser#function.
     def exitFunction(self, ctx:QuetzalParser.FunctionContext):
-        print(namesTable.actualT)
+        #print(namesTable.actualT)
         namesTable.clearLocalT()
         #print("Exit function")
         #pass
+
+        
+    # Enter a parse tree produced by QuetzalParser#exp.
+    def enterExp(self, ctx:QuetzalParser.ExpContext):
+        stack = []
+        buffer = ctx.getChildren()
+        for token in buffer:
+            #print(token in ctx.term())
+            ##print(token.getText())
+            if token in ctx.term():
+                stack +=  self.enterTerm(token)
+                #if len(stack)>0:
+                    #print(stack[len(stack)-1])
+            if token in ctx.SYM_PLUS():
+                stack.append("+")
+        #print(stack)
+
+
+        
+        
+
+    # Exit a parse tree produced by QuetzalParser#exp.
+    def exitExp(self, ctx:QuetzalParser.ExpContext):
+        pass
+
+    # Enter a parse tree produced by QuetzalParser#term.
+    def enterTerm(self, ctx:QuetzalParser.TermContext):
+        stack = []
+        buffer = ctx.getChildren()
+        for token in buffer:
+            if token in  ctx.SYM_MULT():
+                stack.append("*")
+        return stack
+
+    # Exit a parse tree produced by QuetzalParser#term.
+    def exitTerm(self, ctx:QuetzalParser.TermContext):
+        pass
+
