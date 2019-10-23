@@ -7,6 +7,7 @@ sys.tracebacklimit = 0
 namesTable = NamesTable() #Crear instancia del directorio de variables
 semanticCube = SemanticCube()
 
+#CLASE QUE CONTIENE LOS DATOS DE LOS CUÁDRUPLOS
 class Quad:
     def __init__(self, operador, operandoI, operandoD, resultado):
         self.Operador = operador
@@ -15,7 +16,7 @@ class Quad:
         self.Resultado = resultado
         
 
-#CLASE QUE SE ENCARGA DEL MANEJO DE LOS CUÁDRUPLOS
+#CLASE QUE SE ENCARGA DEL MANEJO DE LOS CUÁDRUPLOS Y DEFINICIÓN DE PUNTOS NEURÁLGICOS
 class Stack:
     def __init__(self):
         self.Quads = [] #Arreglo de cuádruplos
@@ -23,7 +24,6 @@ class Stack:
         self.Opd = [] #Stack de Operandos
         self.Saltos =  [] #Stack de Saltos
         self.Types = []#Stack de tipos
-        self.Quad = [] #Stack de Cuádruplos
         self.tempCounter = 1 #Contador de varibles temporales creadas
         self.QuadCounter = 1 #Contará los Cuadruplos´
     
@@ -131,7 +131,6 @@ class Stack:
         tipo = self.Types.pop()
         if tipo != "bool":
             raise Exception("La expresión dentro del If debe resultar en bool")
-        #FALTA CHECAR SI EL TIPO DE out ES BOOL
         ###print(str(self.QuadCounter) +"- " + "GOTOF" + " " + out + " " + "_" + " " + "PEND" )
         self.Quads.append(Quad("GOTOF",out,None,"PEND"))
         self.QuadCounter+=1

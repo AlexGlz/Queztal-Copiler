@@ -4,6 +4,7 @@ define color cPaleta = #FFFFFF;
 
 func int sumar(int x, float y){
     define bool bDefCheck;
+    y = y + y;
    return x+y;
 }
 
@@ -17,5 +18,5 @@ func void noHaceNada(){
 
 func main(){
     define int iResult;
-    print(1+2
+    print(1+2);
 }

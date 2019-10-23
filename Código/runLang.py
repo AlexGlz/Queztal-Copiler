@@ -1,5 +1,3 @@
-import sys
-
 from antlr4 import *
 from build.QuetzalLexer import QuetzalLexer #Se importa el Léxico generado
 from build.QuetzalParser import QuetzalParser #Se importa el Parser generados

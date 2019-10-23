@@ -2,7 +2,7 @@ grammar Quetzal;
 
 @header{
 from build.intermediateCode import *
-} 
+}
 
 /* Parser Rules */
 program: variables* function* main{stack.printQuads()};
