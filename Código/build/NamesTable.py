@@ -1,14 +1,25 @@
+from MemoryManager import *
+
 class NamesTable():
     def __init__(self):
         self.functionsT = dict()
         self.globalsT = dict()
         self.actualT = None
+        self.parameterC = 0
+        self.actualFuncName = ""
+        self.varCnt = 0
+        self.constantsT = dict()
     
-    def addFunction(self,newFunct,type): #function to register a newFunction
+    def addFunction(self,newFunct,type,position): #function to register a newFunction
         if newFunct in self.functionsT or newFunct in self.globalsT: #checks if name of function already exists in functinosT or in globalsT
             raise Exception("Function '" + newFunct + "' already exists") #display exception
         else:
-            self.functionsT[newFunct] = type #add function to functionsT
+            self.functionsT[newFunct] = {}
+            self.functionsT[newFunct]["type"] = type #add function to functionsT
+            self.functionsT[newFunct]["position"] = position
+            self.functionsT[newFunct]["parameters"] = []
+            self.functionsT[newFunct]["locals"] = dict()
+            self.actualFuncName = newFunct
             return True
         
 
@@ -17,6 +28,8 @@ class NamesTable():
         if (newVar in self.actualT) or (newVar in self.globalsT) or (newVar in self.functionsT): #checks if name of is not already defined in local, global context or as a name of a function
             raise Exception("Variable '" + newVar + "' already defined") #display exception
         else:
+            virtualAdd = Memory.assignMemory("Local",type,1)
+            self.functionsT[self.actualFuncName]["locals"][newVar] = {"type":type,"dir":virtualAdd}
             self.actualT[newVar] = type #add function to local actualT
             return True
 
@@ -25,7 +38,8 @@ class NamesTable():
         if (newVar in self.globalsT or newVar in self.functionsT):
             raise Exception("Variable '" + newVar + "' already defined")
         else:
-            self.globalsT[newVar] = type
+            memLocation = Memory.assignMemory("Global",type,1)
+            self.globalsT[newVar] = {"type":type,"dir":memLocation}
             return True
 
     #Identifica el contexto actual de la creación de variables, posteriormente guarda la variable como local
@@ -35,8 +49,19 @@ class NamesTable():
             self.addGlobalVar(newVar,type)
         else:
             self.addLocalVar(newVar,type)
+            self.varCnt +=1
+    
+    def addParameter(self,newVar,type):
+        self.addVar(newVar,type)
+        self.parameterC += 1
+        self.functionsT[self.actualFuncName]["parameters"].append(newVar)
+
+    def exitParams(self):
+        self.functionsT[self.actualFuncName]["parNum"] = self.parameterC
+        
 
     #Inicializa la tabla de variables locales
     def initLocalT(self):
         self.actualT = dict()
+        self.parameterC = 0
 

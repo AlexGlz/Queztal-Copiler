@@ -1,22 +1,17 @@
-define int iContador, iMax, iMin; //Ejemplo base para definir y usar funciones
-define float fTemp;
-define color cPaleta = #FFFFFF;
+define int a,b;
+define float f;
 
-func int sumar(int x, float y){
-    define bool bDefCheck;
-    y = y + y;
-   return x+y;
-}
-
-func void restar(float a, int b){
-    return a-b;
-}
-
-func void noHaceNada(){
-    return;
+func void uno(int x){
+    define float n,m;
 }
 
 func main(){
-    define int iResult;
-    print(1+2);
+    define int x,iA,iB,iC,iE;
+    define float fA, fB, fC, fD;
+    
+    x = 5;
+    x = x * 10 + 1;
+    print(x);  
+
+    
 }

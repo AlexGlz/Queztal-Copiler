@@ -1,9 +1,12 @@
 from antlr4 import *
 from build.QuetzalLexer import QuetzalLexer #Se importa el Léxico generado
 from build.QuetzalParser import QuetzalParser #Se importa el Parser generados
-from QuetzalSemantic import QuetzalSemantic #Importar el analizador Semántico 
+#from QuetzalSemantic import QuetzalSemantic #Importar el analizador Semántico 
 
 from antlr4.error.ErrorListener import ErrorListener
+import sys
+
+sys.tracebacklimit = 100
 
 class CustomErrorListener(ErrorListener):
 
@@ -24,12 +27,11 @@ def main():
     parser._listeners = [CustomErrorListener()]
     lexer._listeners = [CustomErrorListener()]
     tree = parser.program()
-    semantic = QuetzalSemantic()
-    walker = ParseTreeWalker()
-    walker.walk(semantic,tree)
+    #semantic = QuetzalSemantic()
+    #walker = ParseTreeWalker()
+    #walker.walk(semantic,tree)
     
     #visitor = QuetzalGrammar()
-    
     #return visitor.visit(tree)
 
 if __name__ == '__main__':

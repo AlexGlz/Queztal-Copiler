@@ -5,10 +5,16 @@ from build.intermediateCode import *
 }
 
 /* Parser Rules */
-program: variables* function* main{stack.printQuads()};
-main: TK_FUNC{namesTable.addFunction("main","void")} TK_MAIN{namesTable.initLocalT()} SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
+program: {stack.initProgram()}variables* function* main{stack.printQuads()};
+main: {stack.fill(stack.Saltos.pop(),stack.QuadCounter)}TK_FUNC{namesTable.addFunction("main","void",stack.QuadCounter)} TK_MAIN{stack.enterFunc()} SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables* statute* SYM_CURLY_BRACK_CLOSE{stack.exitMain()};
 variables: TK_DEFINE types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)} ({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})? (SYM_COMMA TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)}({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})?)* SYM_SEMI_COL;
-function: TK_FUNC{namesTable.initLocalT()} (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text)})  SYM_PAREN_OPEN (types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)} (SYM_COMMA types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)})*)? SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
+function: TK_FUNC{stack.enterFunc()} 
+        (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text,stack.QuadCounter)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text,stack.QuadCounter)})  
+        SYM_PAREN_OPEN 
+        (types TYPE_ID{namesTable.addParameter($TYPE_ID.text,$types.text)} (SYM_COMMA types TYPE_ID{namesTable.addParameter($TYPE_ID.text,$types.text)})*)? 
+        SYM_PAREN_CLOSE{namesTable.exitParams()} 
+        SYM_CURLY_BRACK_OPEN variables? statute* 
+        SYM_CURLY_BRACK_CLOSE{stack.exitFunc()};
 block: SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
 types: (TK_INT | TK_FLOAT | TK_COLOR | TK_BOOL) (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*;
 constants: (TYPE_INT {stack.addType("int")}
@@ -45,9 +51,14 @@ logic_op: SYM_EQUAL| SYM_GRE_THAN | SYM_LOW_THAN| SYM_NOT_EQUAL | SYM_GRE_EQ | S
  
 
 returning: TK_RETURN expression? SYM_SEMI_COL;
-callfunc: TYPE_ID SYM_PAREN_OPEN (expression (SYM_COMMA expression)*)? SYM_PAREN_CLOSE SYM_SEMI_COL;
+
+callfunc: TYPE_ID {stack.enterCallFunc($TYPE_ID.text)} 
+        SYM_PAREN_OPEN 
+        (expression{stack.getParam($TYPE_ID.text)} (SYM_COMMA expression{stack.getParam($TYPE_ID.text)})*)? 
+        SYM_PAREN_CLOSE{stack.exitParams($TYPE_ID.text)}
+        SYM_SEMI_COL{stack.exitCallFunc($TYPE_ID.text)};
  
-loop: TK_WHILE SYM_PAREN_OPEN expression SYM_PAREN_CLOSE block;
+loop: TK_WHILE SYM_PAREN_OPEN expression{stack.enterCicle()} SYM_PAREN_CLOSE block{stack.exitCicle()};
  
 //SPECIAL FUNCTIONS
 openimg: TK_OPENIMG SYM_PAREN_OPEN CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;

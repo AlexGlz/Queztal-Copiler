@@ -2,6 +2,7 @@ from build.QuetzalParser import QuetzalParser
 from build.QuetzalParser import stack
 from build.QuetzalListener import QuetzalListener
 from NamesTable import NamesTable
+from MemoryManager import *
 
 namesTable = NamesTable()
 bGlobalsDeclared = False
