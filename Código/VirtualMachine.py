@@ -35,8 +35,7 @@ class VirtualMemory:
         location = self.getLocation(address)
         scope = location[0]
         type = location[1]
-        if(scope == "Global" or scope == "Constant"):
-            
+        if(scope == "Global" or scope == "Constant"):        
             valor=self.vMemory[scope][type][index]
         else:
             valor=self.vMemory["Stack"][-1][scope][type][index] #El -1 permite acceder al último elemento del stack
@@ -51,6 +50,8 @@ class VirtualMemory:
                 return False
             else:
                 return None
+        elif(type == "memory"):
+            return self.getValue(valor)
         else:
             return valor
 

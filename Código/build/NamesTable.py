@@ -10,6 +10,7 @@ class NamesTable():
         self.varCnt = 0
         self.constantsT = dict()
         self.dimensions = []
+        self.actualR = 1
     
     def addFunction(self,newFunct,type,position): #function to register a newFunction
         if newFunct in self.functionsT or newFunct in self.globalsT: #checks if name of function already exists in functinosT or in globalsT
@@ -23,8 +24,19 @@ class NamesTable():
             self.actualFuncName = newFunct
             return True
     def addDimension(self,dimSize):
-        self.dimensions.append(int(dimSize))
+        dimSize = int(dimSize)
+        self.dimensions.append({"ls":dimSize-1,"m":1})
+        self.actualR = self.actualR * dimSize
+    
+    def dimentionDef(self):
+        print(self.actualR)
+        suma = 0
+        for i in range(0,len(self.dimensions)):
+            self.dimensions[i]["m"] = self.actualR/(self.dimensions[i]["ls"]+1)
+            self.actualR= self.dimensions[i]["m"]
+        
 
+        
 
     def addLocalVar(self,newVar,type): #function to register a new Local Variable
         if self.actualT == None: self.actualT = dict() 
@@ -32,8 +44,10 @@ class NamesTable():
             raise Exception("Variable '" + newVar + "' already defined") #display exception
         else:
             virtualAdd = Memory.assignMemory("Local",type,1)
+            self.dimentionDef()
             self.functionsT[self.actualFuncName]["locals"][newVar] = {"type":type,"dir":virtualAdd,"dim":self.dimensions}
             self.dimensions = []
+            self.actualR = 1
             self.actualT[newVar] = type #add function to local actualT
             return True
 
@@ -43,6 +57,7 @@ class NamesTable():
             raise Exception("Variable '" + newVar + "' already defined")
         else:
             memLocation = Memory.assignMemory("Global",type,1)
+            self.dimentionDef()
             self.globalsT[newVar] = {"type":type,"dir":memLocation,"dim":self.dimensions}
             self.dimensions = []
             return True

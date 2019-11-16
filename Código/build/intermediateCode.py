@@ -170,6 +170,12 @@ class Stack:
         self.Quads.append(Quad("gosub",funcName,None,None))
         self.QuadCounter+=1
 
+    def generateVer(self, operando, limInf, limSup):
+        #print(str(self.QuadCounter)+operando+" "+limInf+" "+limSup)
+        self.Quads.append(Quad("VER",operando,limInf,limSup))
+        self.QuadCounter+=1
+    #####################FIN GENERADORES DE CUÁDRUPLOS#################################
+
     def getParam(self, fName):
         parameterCounter = self.ParamCounter[fName]
         parameterNumber = namesTable.functionsT[fName]['parNum']
@@ -278,7 +284,9 @@ class Stack:
     def exitCallFunc(self,funcName):
         self.generateGoSub(funcName)
         
+    ##Al detectar el acceso a un índice
     def dimEnter(self,varName):
+        #Agrega la dimensión a la pila de dimesiones
         if(len(self.Dims)>0):
             front = self.Dims[-1]
             if(front[0] == varName):
@@ -288,24 +296,55 @@ class Stack:
         else:
             self.Dims.append([varName,1])
         
+        ##Obtener el nombre de la variable y el número de la dimensión actual de la pila de Dimensiones
         frontName = self.Dims[-1][0]
         frontDim = self.Dims[-1][1]
 
-        limSup = namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dim"][frontDim-1]
-        print("VER",self.Opd.pop(),"1",limSup)
+        listaDim = namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dim"]
+        aux=self.Opd.pop()
+
+        print("VER", aux, 0 , listaDim[frontDim-1]["ls"])
+        self.generateVer(aux,0,listaDim[frontDim-1]["ls"])
+        if(frontDim<len(listaDim)):
+            
+            T = Memory.assignMemory("Temp","int",1)
+            self.tempCounter+=1
+            #print("*",aux,listaDim[frontDim-1]["m"],T)
+            self.Quads.append(Quad("*",listaDim[frontDim-1]["m"],T))
+            self.QuadCounter+=1
+
+        if(frontDim>1):
+            aux2 = self.Opd.pop()
+            aux1 = self.Opd.pop()
+            T = Memory.assignMemory("Temp","int",1)
+            #print("+",aux1,aux2,T)
+            self.Quads.append(Quad("+",aux1,aux2,T))
+            self.QuadCounter+=1
+            self.Opd.append(T)
+        
+        if(frontDim==len(listaDim)):
+            aux1 = self.Opd.pop()
+            T = Memory.assignMemory("Temp","int",1)
+
+            ##POR EL MOMENTO LA DIRECCION SE AGREGA DIRECTAMENTE AL CUADRUPLO, HAY QUE GUARDARLA EN UNA CTE Y PASARLE LA DIRECCION
+            #print("+",aux1,namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dir"],T)
+            self.Quads.append(Quad("+",aux,namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dir"],"(" +str(T)+")"))
+            self.QuadCounter+=1
+            self.Opd.append("(" +str(T)+")")
+        #print("VER",self.Opd.pop(),"1",limSup)
 
     def printQuads(self):
         counter = 1
         for quad in self.Quads:
-            #print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
+            print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
         virtualMachine = VirtualMachine(self.Quads,tables)
         print(self.Dims)
         ##virtualMachine.run()
         #print(namesTable.globalsT)
-        #print(namesTable.constantsT)
-        #print(namesTable.functionsT)
+        print(namesTable.constantsT)
+        print(namesTable.functionsT)
         
 
         
