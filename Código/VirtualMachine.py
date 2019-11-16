@@ -25,6 +25,7 @@ class VirtualMemory:
         for (cte,data) in constants.items():
             self.vMemory["Constant"][data["type"]].append(cte)
 
+
     def getLocation(self,address):
         defaultAdd = address - (address%Memory.MemSize)
         return Memory.Reference[defaultAdd]
@@ -43,6 +44,13 @@ class VirtualMemory:
             return int(valor)
         elif(type == "float"):
             return float(valor)
+        elif(type == "bool"):
+            if(valor=="True" or valor==True):
+                return True
+            elif(valor=="False" or valor==False):
+                return False
+            else:
+                return None
         else:
             return valor
 
@@ -71,28 +79,54 @@ class VirtualMemory:
 
 
 class VirtualMachine():
+    
+
     def __init__(self,quads,tables):
+        ##LISTAS DE OPERADORES DEL LEGUAJE
+        self.aritmethicOP = ["+","-","*","/"]
+        self.logicOp = ["==","!=",">",">=","<","<=","||","&&"]
+        self.gotos = ["GOTOF","GOTO","GOTOV","GOSUB"]
+        ##Instanciar Memoria virtual
         self.virtualMemory = VirtualMemory(tables["globals"],tables["constants"])
-        self.Quads = quads
+        ##Manejo de cuádruplos
+        self.Quads = quads           
+        self.QuadCounter = 0
+
         mainVars = tables["functions"]["main"]["vars"]
         mainTemps =tables["functions"]["main"]["temps"]
         self.virtualMemory.ERA({"Local":mainVars,"Temp":mainTemps})
+
         
     def run(self):
-        for quad in self.Quads:
+        while self.QuadCounter < len(self.Quads):
+            quad = self.Quads[self.QuadCounter]
             operador = quad.Operador
             izq = quad.OperandoI
             der = quad.OperandoD
             resultado = quad.Resultado
             if(operador == "="):
                 self.virtualMemory.setValue(self.virtualMemory.getValue(izq),resultado)
-            elif(operador=="+" or operador=="-"or operador=="*" or operador=='/'): 
+            elif(operador in self.aritmethicOP): 
                 izqVal = self.virtualMemory.getValue(izq)
                 derVal = self.virtualMemory.getValue(der)
                 valor = self.aritmethicExp(izqVal,derVal,operador)
                 self.virtualMemory.setValue(valor,resultado)
+            elif(operador in self.logicOp):
+                izqVal = self.virtualMemory.getValue(izq)
+                derVal = self.virtualMemory.getValue(der)
+                valor = self.logicExp(izqVal,derVal,operador)
+                self.virtualMemory.setValue(valor,resultado)
+            elif(operador in self.gotos):
+                izqVal = 0
+                if(izq is not None):
+                    izqVal = self.virtualMemory.getValue(izq)
+                else:
+                    izqVal = None
+                
+                self.goTo(izqVal,operador,resultado)
             elif(operador=="print"):
                 print(self.virtualMemory.getValue(resultado))
+            self.QuadCounter += 1
 
     def aritmethicExp(self,valorIzq,valorDer,operador):
         if(operador == "+"):
@@ -103,3 +137,30 @@ class VirtualMachine():
             return valorIzq * valorDer
         elif (operador == "/"):
             return valorIzq / valorDer
+
+    def logicExp(self,valorIzq,valorDer,operador):
+        if(operador == ">"):
+            return valorIzq > valorDer
+        elif(operador == "<"):
+            return valorIzq < valorDer
+        elif(operador == ">="):
+            return valorIzq >= valorDer
+        elif(operador == "<="):
+            return valorIzq <= valorDer
+        elif(operador == "=="):
+            return valorIzq == valorDer
+        elif(operador == "!="):
+            return valorIzq != valorDer
+        elif(operador == "||"):
+            return valorIzq or valorDer
+        elif(operador == "&&"):
+            return valorIzq and valorDer
+        else:
+            return None
+
+    def goTo(self,valorIzq,operador,posicion):
+        if(operador == "GOTO"):
+            self.QuadCounter = posicion - 2
+        if(operador == "GOTOF"):
+            if(valorIzq == False):
+                self.QuadCounter = posicion - 2

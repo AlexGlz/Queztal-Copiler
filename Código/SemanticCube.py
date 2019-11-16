@@ -176,10 +176,10 @@ class SemanticCube():
                         "<":None,
                         ">=":None,
                         "<=":None,
-                        "==":None,
-                        "!=":None,
-                        "&&":None,
-                        "||":None,
+                        "==":"bool",
+                        "!=":"bool",
+                        "&&":"bool",
+                        "||":"bool",
                         "=":"bool"              
                     },
                 "color":

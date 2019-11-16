@@ -2,32 +2,40 @@ grammar Quetzal;
 
 @header{
 from build.intermediateCode import *
+
 }
 
 /* Parser Rules */
 program: {stack.initProgram()}variables* function* main{stack.printQuads()};
 main: {stack.fill(stack.Saltos.pop(),stack.QuadCounter)}TK_FUNC{namesTable.addFunction("main","void",stack.QuadCounter)} TK_MAIN{stack.enterFunc()} SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables* statute* SYM_CURLY_BRACK_CLOSE{stack.exitMain()};
-variables: TK_DEFINE types TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)} ({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})? (SYM_COMMA TYPE_ID{namesTable.addVar($TYPE_ID.text,$types.text)}({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})?)* SYM_SEMI_COL;
+variables: 
+    TK_DEFINE types TYPE_ID
+    ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)}SYM_SQUARE_BRACK_CLOSE)+|({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()}))?
+    {namesTable.addVar($TYPE_ID.text,$types.text)} 
+    (SYM_COMMA TYPE_ID
+        ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)} SYM_SQUARE_BRACK_CLOSE)+|({stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()}))?
+        {namesTable.addVar($TYPE_ID.text,$types.text)} 
+    )* SYM_SEMI_COL;
 function: TK_FUNC{stack.enterFunc()} 
         (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text,stack.QuadCounter)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text,stack.QuadCounter)})  
         SYM_PAREN_OPEN 
         (types TYPE_ID{namesTable.addParameter($TYPE_ID.text,$types.text)} (SYM_COMMA types TYPE_ID{namesTable.addParameter($TYPE_ID.text,$types.text)})*)? 
         SYM_PAREN_CLOSE{namesTable.exitParams()} 
-        SYM_CURLY_BRACK_OPEN variables? statute* 
+        SYM_CURLY_BRACK_OPEN variables* statute* 
         SYM_CURLY_BRACK_CLOSE{stack.exitFunc()};
-block: SYM_CURLY_BRACK_OPEN variables? statute* SYM_CURLY_BRACK_CLOSE;
-types: (TK_INT | TK_FLOAT | TK_COLOR | TK_BOOL) (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*;
-constants: (TYPE_INT {stack.addType("int")}
+block: SYM_CURLY_BRACK_OPEN variables* statute* SYM_CURLY_BRACK_CLOSE;
+types: (TK_INT | TK_FLOAT | TK_COLOR | TK_BOOL);
+constants: TYPE_INT {stack.addType("int")}
     | TYPE_FLOAT {stack.addType("float")}
     | CTE_TAG {stack.addType("tag")}
     | TYPE_BOOL {stack.addType("bool")}
-    | TYPE_COLOR{stack.addType("color")});
+    | TYPE_COLOR{stack.addType("color")};
 
 prints: TK_PRINT SYM_PAREN_OPEN{stack.addOp('(')} expression{stack.generatePrint()} (SYM_COMMA expression{stack.generatePrint()})* SYM_PAREN_CLOSE{stack.removeP()} SYM_SEMI_COL; 
 read: TK_READ SYM_PAREN_OPEN TYPE_ID{stack.addOperand($TYPE_ID.text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE(SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*)? SYM_PAREN_CLOSE{stack.generateRead()} SYM_SEMI_COL;
 
 statute: returning|condition|loop|prints|read|callfunc|specfunct|assignation;
-assignation: TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN{stack.addOp('=')} (specfunct|(expression SYM_SEMI_COL)){stack.exitAssign()};
+assignation: TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression{stack.dimEnter($TYPE_ID.text)} SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN{stack.addOp('=')} (specfunct|(expression SYM_SEMI_COL)){stack.exitAssign()};
 condition: 
     TK_IF SYM_PAREN_OPEN {stack.addOp('(')} 
     expression 

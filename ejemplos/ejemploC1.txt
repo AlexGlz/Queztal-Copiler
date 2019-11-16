@@ -1,17 +1,6 @@
-define int a,b;
-define float f;
-
-func void uno(int x){
-    define float n,m;
-}
 
 func main(){
-    define int x,iA,iB,iC,iE;
-    define float fA, fB, fC, fD;
-    
-    x = 5;
-    x = x * 10 + 1;
-    print(x);  
-
-    
+    define int x[10][20];
+    x[0][0] = 10;
+    print(x);
 }

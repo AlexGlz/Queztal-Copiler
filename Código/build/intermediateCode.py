@@ -14,6 +14,7 @@ class Quad:
         self.OperandoD = operandoD
         self.Resultado = resultado
         
+        
 
 #CLASE QUE SE ENCARGA DEL MANEJO DE LOS CUÁDRUPLOS Y DEFINICIÓN DE PUNTOS NEURÁLGICOS
 class Stack:
@@ -26,6 +27,7 @@ class Stack:
         self.tempCounter = 1 #Contador de varibles temporales creadas
         self.QuadCounter = 1 #Contará los Cuadruplos
         self.ParamCounter = dict()
+        self.Dims=[] #Stack de dimensiones
     
     ############FUNCIONES AUXILIARES#####################
     def addOp(self, operator): #Para adjuntar un operador al stack de operandos
@@ -276,15 +278,31 @@ class Stack:
     def exitCallFunc(self,funcName):
         self.generateGoSub(funcName)
         
-    
+    def dimEnter(self,varName):
+        if(len(self.Dims)>0):
+            front = self.Dims[-1]
+            if(front[0] == varName):
+                self.Dims.append([varName,front[1]+1])
+            else:
+                self.Dims.append([varName,1])
+        else:
+            self.Dims.append([varName,1])
+        
+        frontName = self.Dims[-1][0]
+        frontDim = self.Dims[-1][1]
+
+        limSup = namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dim"][frontDim-1]
+        print("VER",self.Opd.pop(),"1",limSup)
+
     def printQuads(self):
         counter = 1
         for quad in self.Quads:
-            print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
+            #print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
         virtualMachine = VirtualMachine(self.Quads,tables)
-        virtualMachine.run()
+        print(self.Dims)
+        ##virtualMachine.run()
         #print(namesTable.globalsT)
         #print(namesTable.constantsT)
         #print(namesTable.functionsT)
@@ -292,3 +310,4 @@ class Stack:
 
         
 stack = Stack()
+

@@ -1,4 +1,5 @@
 class Memory:
+    """ANTIGUA DECLARACION DE LAS DIRECCIONES DE MEMORIA
     MemSize = 1000
     Reference={
         MemSize*1:["Global","int"],
@@ -34,7 +35,19 @@ class Memory:
             "float":{"dir":MemSize*9,"declared":0},
             "color":{"dir":MemSize*10,"declared":0}
         }
-    }
+    }"""
+    Reference= dict()
+    MemSize = 1000
+    counter = 1
+    scopes = ["Global","Local","Temp","Constant"]
+    types = ["int","float","bool","color"]
+    Directions = dict()
+    for scope in scopes:
+        Directions[scope] = dict()
+        for type in types:
+            Reference[MemSize*counter] = [scope,type]
+            Directions[scope][type] = {"dir":MemSize*counter,"declared":0}
+            counter+=1
 
     @staticmethod
     def assignMemory(scope,type,size):
@@ -49,5 +62,3 @@ class Memory:
     def resetMemory(scope): #used to clean temps and local variables
         for k in Memory.Directions[scope].keys():
             Memory.Directions[scope][k]["declared"] = 0
-            
-
