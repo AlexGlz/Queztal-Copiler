@@ -92,7 +92,7 @@ class Stack:
     #funcion Aux usada por exitExpLogic, exitExp, exitTerm y exitFactor
     #manda a generar un cuadrante binario y actualiza los vectores
     def auxExit(self, arrOp):
-        if self.O == []:
+        if self.O == [] or self.O[-1] == '(':
             return
         while self.O != [] and self.O[len(self.O)-1] in arrOp:
             self.generateBinaryQuad() #genera un Cuadrante Binario
@@ -146,13 +146,11 @@ class Stack:
     def generateRead(self):
         out = self.Opd.pop()
         tipo = self.Types.pop()
-        #print(str(self.QuadCounter) +"- " + "read" + " " + "_" + " " + "_" + " " + out )
         self.Quads.append(Quad("read",None,None,out))
         self.QuadCounter+=1
 
     #format 2 ERA funcName _ _
     def generateERA(self, fName):
-        #print(str(self.QuadCounter)+"- "+fName+ " _ _")
         self.Quads.append(Quad("ERA",fName,None,None))
         self.QuadCounter+=1
         self.ParamCounter[fName] = 0
@@ -161,7 +159,6 @@ class Stack:
     def generateParam(self,paramCount):
         paramName = self.Opd.pop()
         paramNum = "param" + str(paramCount)
-        #print(str(self.QuadCounter)+"- "+fName+ " _ _")
         self.Quads.append(Quad("param",paramName,None,paramNum))
         self.QuadCounter+=1
  
@@ -171,7 +168,6 @@ class Stack:
         self.QuadCounter+=1
 
     def generateVer(self, operando, limInf, limSup):
-        #print(str(self.QuadCounter)+operando+" "+limInf+" "+limSup)
         self.Quads.append(Quad("VER",operando,limInf,limSup))
         self.QuadCounter+=1
     #####################FIN GENERADORES DE CUÁDRUPLOS#################################
@@ -204,7 +200,6 @@ class Stack:
         tipo = self.Types.pop()
         if tipo != "bool":
             raise Exception("La expresión dentro del If debe resultar en bool")
-        ###print(str(self.QuadCounter) +"- " + "GOTOF" + " " + out + " " + "_" + " " + "PEND" )
         self.Quads.append(Quad("GOTOF",out,None,"PEND"))
         self.QuadCounter+=1
     ###GOTO
@@ -214,6 +209,27 @@ class Stack:
     ##ENDPROC
     def generateEndProc(self):
         self.Quads.append(Quad("ENDPROC",None,None,None))
+        self.QuadCounter+=1
+    
+    ##RETURN PARA VOID
+    def generateReturnVoid(self):
+        function = namesTable.actualFuncName
+        functType = namesTable.functionsT[function]["type"]
+        if(functType != "void"): #La función debe de ser Void en este return
+             raise Exception(f"Function '{function}' is [{functType}] and returned [void]") #display exception
+        self.Quads.append(Quad("RETURN",None,None,None))
+        self.QuadCounter+=1
+        
+
+    ##RETURN
+    def generateReturn(self):
+        function = namesTable.actualFuncName
+        functType = namesTable.functionsT[function]["type"]
+        stackType = self.Types.pop()
+        if(functType != stackType): #La función debe de ser Void en este return
+            raise Exception(f"Function '{function}' is [{functType}] and returned [{stackType}]")
+        operand = self.Opd.pop()
+        self.Quads.append(Quad("RETURN",None,None,operand))
         self.QuadCounter+=1
         
     ###RELLENADOR DE CUÁDRUPLOS
@@ -257,7 +273,9 @@ class Stack:
         namesTable.varCnt = 0
         Memory.resetMemory("Local")
         Memory.resetMemory("Temp")
-        self.generateEndProc()
+        ##ENDPROC SE GENERA EN FUNCIONES QUE NO SON main
+        if(namesTable.actualFuncName != "main"):
+            self.generateEndProc()
 
     def countVarByTypeScope(self,scope):
         varCount = dict()
@@ -276,13 +294,27 @@ class Stack:
     #callfunc: TYPE_ID SYM_PAREN_OPEN (expression (SYM_COMMA expression)*)? SYM_PAREN_CLOSE SYM_SEMI_COL;
     def enterCallFunc(self, funcName):
         if funcName in namesTable.functionsT: #Verify that the procedure exists into the DirFunc
-            self.generateERA(funcName)
-            
+            self.generateERA(funcName)            
         else:            
             raise Exception("Function '" + funcName + "' not defined") #display exception
 
     def exitCallFunc(self,funcName):
         self.generateGoSub(funcName)
+        if(namesTable.functionsT[funcName]["type"] != "void"): #Si la funcion no es void generar su cúadruplo para el return
+            functVarAdd = namesTable.globalsT[funcName]["dir"]
+            functVarType = namesTable.globalsT[funcName]["type"]
+            
+            tempDir = Memory.assignMemory("Temp",functVarType,1)
+            self.tempCounter +=1;
+
+            self.O.append("=")
+            self.Opd.append(tempDir)
+            self.Opd.append(functVarAdd)
+            self.Types.append(functVarType)
+            self.Types.append(functVarType)
+            self.generateUnaryQuad()
+            self.Opd.append(tempDir)
+            self.Types.append(functVarType)
         
     ##Al detectar el acceso a un índice
     def dimEnter(self,varName):
@@ -303,15 +335,17 @@ class Stack:
         listaDim = namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dim"]
         aux=self.Opd.pop()
 
-        print("VER", aux, 0 , listaDim[frontDim-1]["ls"])
+        #print("VER", aux, 0 , listaDim[frontDim-1]["ls"])
         self.generateVer(aux,0,listaDim[frontDim-1]["ls"])
-        if(frontDim<len(listaDim)):
-            
+        if(frontDim<len(listaDim)):        
             T = Memory.assignMemory("Temp","int",1)
             self.tempCounter+=1
             #print("*",aux,listaDim[frontDim-1]["m"],T)
-            self.Quads.append(Quad("*",listaDim[frontDim-1]["m"],T))
+            self.Quads.append(Quad("*",aux,listaDim[frontDim-1]["m"],T))
             self.QuadCounter+=1
+
+            self.Opd.append(T);
+            self.Types.append("int")
 
         if(frontDim>1):
             aux2 = self.Opd.pop()
@@ -340,11 +374,14 @@ class Stack:
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
         virtualMachine = VirtualMachine(self.Quads,tables)
-        print(self.Dims)
-        ##virtualMachine.run()
+        #print(self.Dims)
         #print(namesTable.globalsT)
-        print(namesTable.constantsT)
+        #print(namesTable.constantsT)
         print(namesTable.functionsT)
+
+        #virtualMachine.run()
+        
+        
         
 
         

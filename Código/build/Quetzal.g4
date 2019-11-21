@@ -34,8 +34,8 @@ constants: TYPE_INT {stack.addType("int")}
 prints: TK_PRINT SYM_PAREN_OPEN{stack.addOp('(')} expression{stack.generatePrint()} (SYM_COMMA expression{stack.generatePrint()})* SYM_PAREN_CLOSE{stack.removeP()} SYM_SEMI_COL; 
 read: TK_READ SYM_PAREN_OPEN TYPE_ID{stack.addOperand($TYPE_ID.text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE(SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*)? SYM_PAREN_CLOSE{stack.generateRead()} SYM_SEMI_COL;
 
-statute: returning|condition|loop|prints|read|callfunc|specfunct|assignation;
-assignation: TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression{stack.dimEnter($TYPE_ID.text)} SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN{stack.addOp('=')} (specfunct|(expression SYM_SEMI_COL)){stack.exitAssign()};
+statute: returning|condition|loop|prints|read|(callfunc SYM_SEMI_COL)|specfunct|assignation;
+assignation: TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression{stack.dimEnter($TYPE_ID.text)} SYM_SQUARE_BRACK_CLOSE)* SYM_ASSIGN{stack.addOp('=')} (specfunct|expression) SYM_SEMI_COL{stack.exitAssign()};
 condition: 
     TK_IF SYM_PAREN_OPEN {stack.addOp('(')} 
     expression 
@@ -45,9 +45,11 @@ stack.enterCondition()}
     block (TK_ELSE{stack.enterElse()} block)? {stack.exitCondition()};
 
 var_cte: constants{stack.addConstant($text)}
-   | TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*
-   | TYPE_ID SYM_PAREN_OPEN{stack.addOp('(')} expression (SYM_COMMA expression)* SYM_PAREN_CLOSE;
-
+    | callfunc
+    | TYPE_ID{stack.addOperand($text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*;
+   //| TYPE_ID SYM_PAREN_OPEN{stack.addOp('(')} expression (SYM_COMMA expression)* SYM_PAREN_CLOSE;
+    
+    
 //EXPRESIONES->EXP->TERM->FACTOR
 expression:  expLogic{stack.exitExpLogic()}((SYM_OR{stack.addOp('||')} | SYM_AND{stack.addOp('&&')}) expLogic{stack.exitExpLogic()})*;
 expLogic: exp{stack.exitExp()} (logic_op{stack.addOp($logic_op.text)} exp{stack.exitExp()})?;
@@ -58,13 +60,14 @@ factor:  (SYM_PAREN_OPEN{stack.addOp('(')} expression SYM_PAREN_CLOSE{stack.remo
 logic_op: SYM_EQUAL| SYM_GRE_THAN | SYM_LOW_THAN| SYM_NOT_EQUAL | SYM_GRE_EQ | SYM_LOW_EQ;
  
 
-returning: TK_RETURN expression? SYM_SEMI_COL;
+returning: TK_RETURN expression{stack.generateReturn()} SYM_SEMI_COL
+    |TK_RETURN{stack.generateReturnVoid()} SYM_SEMI_COL;
 
 callfunc: TYPE_ID {stack.enterCallFunc($TYPE_ID.text)} 
-        SYM_PAREN_OPEN 
+        SYM_PAREN_OPEN {stack.addOp('(')}
         (expression{stack.getParam($TYPE_ID.text)} (SYM_COMMA expression{stack.getParam($TYPE_ID.text)})*)? 
-        SYM_PAREN_CLOSE{stack.exitParams($TYPE_ID.text)}
-        SYM_SEMI_COL{stack.exitCallFunc($TYPE_ID.text)};
+        SYM_PAREN_CLOSE{stack.exitParams($TYPE_ID.text)}{stack.removeP()}
+        {stack.exitCallFunc($TYPE_ID.text)};
  
 loop: TK_WHILE SYM_PAREN_OPEN expression{stack.enterCicle()} SYM_PAREN_CLOSE block{stack.exitCicle()};
  

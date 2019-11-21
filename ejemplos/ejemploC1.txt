@@ -1,6 +1,10 @@
+func void uno(int x, float y){
+    print(x+y);
+}
 
-func main(){
-    define int x[10];
-    x[0] = 10;
-    print(x);
+func main(){  
+    define int x[10][5];
+    define int y;
+
+    x[0][0] = 1;
 }

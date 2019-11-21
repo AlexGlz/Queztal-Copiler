@@ -13,7 +13,7 @@ from build.intermediateCode import *
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3Q")
-        buf.write("\u023c\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u0236\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
@@ -37,48 +37,47 @@ def serializedATN():
         buf.write("\3\t\7\t\u00f3\n\t\f\t\16\t\u00f6\13\t\3\t\3\t\3\t\3\t")
         buf.write("\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\7\n\u0107")
         buf.write("\n\n\f\n\16\n\u010a\13\n\5\n\u010c\n\n\3\n\3\n\3\n\3\n")
-        buf.write("\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u011a\n")
-        buf.write("\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\f\u0123\n\f\f\f\16\f")
-        buf.write("\u0126\13\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u012e\n\f\3\f")
-        buf.write("\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u013c")
+        buf.write("\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13")
+        buf.write("\u011c\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\f\u0125\n\f")
+        buf.write("\f\f\16\f\u0128\13\f\3\f\3\f\3\f\3\f\5\f\u012e\n\f\3\f")
+        buf.write("\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u013d")
         buf.write("\n\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3")
-        buf.write("\16\7\16\u0149\n\16\f\16\16\16\u014c\13\16\3\16\3\16\3")
-        buf.write("\16\3\16\3\16\3\16\7\16\u0154\n\16\f\16\16\16\u0157\13")
-        buf.write("\16\3\16\3\16\5\16\u015b\n\16\3\17\3\17\3\17\3\17\3\17")
-        buf.write("\3\17\5\17\u0163\n\17\3\17\3\17\3\17\7\17\u0168\n\17\f")
-        buf.write("\17\16\17\u016b\13\17\3\20\3\20\3\20\3\20\3\20\3\20\3")
-        buf.write("\20\5\20\u0174\n\20\3\21\3\21\3\21\3\21\3\21\3\21\5\21")
-        buf.write("\u017c\n\21\3\21\3\21\3\21\7\21\u0181\n\21\f\21\16\21")
-        buf.write("\u0184\13\21\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u018c")
-        buf.write("\n\22\3\22\3\22\3\22\7\22\u0191\n\22\f\22\16\22\u0194")
-        buf.write("\13\22\3\23\3\23\3\23\3\23\3\23\3\23\3\23\5\23\u019d\n")
-        buf.write("\23\3\23\5\23\u01a0\n\23\3\24\3\24\3\25\3\25\5\25\u01a6")
-        buf.write("\n\25\3\25\3\25\3\26\3\26\3\26\3\26\3\26\3\26\3\26\3\26")
-        buf.write("\3\26\7\26\u01b3\n\26\f\26\16\26\u01b6\13\26\5\26\u01b8")
+        buf.write("\16\3\16\7\16\u014b\n\16\f\16\16\16\u014e\13\16\5\16\u0150")
+        buf.write("\n\16\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u0158\n\17\3")
+        buf.write("\17\3\17\3\17\7\17\u015d\n\17\f\17\16\17\u0160\13\17\3")
+        buf.write("\20\3\20\3\20\3\20\3\20\3\20\3\20\5\20\u0169\n\20\3\21")
+        buf.write("\3\21\3\21\3\21\3\21\3\21\5\21\u0171\n\21\3\21\3\21\3")
+        buf.write("\21\7\21\u0176\n\21\f\21\16\21\u0179\13\21\3\22\3\22\3")
+        buf.write("\22\3\22\3\22\3\22\5\22\u0181\n\22\3\22\3\22\3\22\7\22")
+        buf.write("\u0186\n\22\f\22\16\22\u0189\13\22\3\23\3\23\3\23\3\23")
+        buf.write("\3\23\3\23\3\23\5\23\u0192\n\23\3\23\5\23\u0195\n\23\3")
+        buf.write("\24\3\24\3\25\3\25\3\25\3\25\3\25\3\25\3\25\3\25\5\25")
+        buf.write("\u01a1\n\25\3\26\3\26\3\26\3\26\3\26\3\26\3\26\3\26\3")
+        buf.write("\26\3\26\7\26\u01ad\n\26\f\26\16\26\u01b0\13\26\5\26\u01b2")
         buf.write("\n\26\3\26\3\26\3\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27")
         buf.write("\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30\3\30\3\31\3\31")
         buf.write("\3\31\3\31\3\31\3\31\3\31\3\31\3\32\3\32\3\32\3\32\3\32")
         buf.write("\3\32\3\32\3\32\3\32\3\32\3\33\3\33\3\33\3\33\3\33\3\33")
         buf.write("\3\34\3\34\3\34\3\34\3\34\3\34\3\34\3\34\3\35\3\35\3\35")
-        buf.write("\3\35\3\35\3\35\3\36\3\36\3\36\3\36\3\36\5\36\u01f8\n")
-        buf.write("\36\3\36\3\36\3\36\5\36\u01fd\n\36\3\36\3\36\3\36\3\36")
+        buf.write("\3\35\3\35\3\35\3\36\3\36\3\36\3\36\3\36\5\36\u01f2\n")
+        buf.write("\36\3\36\3\36\3\36\5\36\u01f7\n\36\3\36\3\36\3\36\3\36")
         buf.write("\3\37\3\37\3\37\3\37\3\37\3\37\3\37\3\37\3 \3 \3 \3 \3")
         buf.write(" \3 \3 \3 \3!\3!\3!\3!\3!\3!\3!\3!\3\"\3\"\3\"\3\"\3\"")
         buf.write("\3\"\3#\3#\3#\3#\3#\3#\3$\3$\3$\3$\3$\3$\3%\3%\3%\3%\3")
-        buf.write("%\3%\3%\3%\3%\3%\3%\3%\3%\5%\u023a\n%\3%\2\2&\2\4\6\b")
+        buf.write("%\3%\3%\3%\3%\3%\3%\3%\3%\5%\u0234\n%\3%\2\2&\2\4\6\b")
         buf.write("\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668")
-        buf.write(":<>@BDFH\2\7\3\2\33\36\3\2DE\3\2;@\3\2JK\4\2HHJJ\2\u0258")
+        buf.write(":<>@BDFH\2\7\3\2\33\36\3\2DE\3\2;@\3\2JK\4\2HHJJ\2\u0251")
         buf.write("\2J\3\2\2\2\4Z\3\2\2\2\6q\3\2\2\2\b\u009f\3\2\2\2\n\u00cc")
         buf.write("\3\2\2\2\f\u00db\3\2\2\2\16\u00e7\3\2\2\2\20\u00e9\3\2")
-        buf.write("\2\2\22\u00fb\3\2\2\2\24\u0119\3\2\2\2\26\u011b\3\2\2")
-        buf.write("\2\30\u0131\3\2\2\2\32\u015a\3\2\2\2\34\u015c\3\2\2\2")
-        buf.write("\36\u016c\3\2\2\2 \u0175\3\2\2\2\"\u0185\3\2\2\2$\u019f")
-        buf.write("\3\2\2\2&\u01a1\3\2\2\2(\u01a3\3\2\2\2*\u01a9\3\2\2\2")
-        buf.write(",\u01be\3\2\2\2.\u01c6\3\2\2\2\60\u01cc\3\2\2\2\62\u01d4")
-        buf.write("\3\2\2\2\64\u01de\3\2\2\2\66\u01e4\3\2\2\28\u01ec\3\2")
-        buf.write("\2\2:\u01f2\3\2\2\2<\u0202\3\2\2\2>\u020a\3\2\2\2@\u0212")
-        buf.write("\3\2\2\2B\u021a\3\2\2\2D\u0220\3\2\2\2F\u0226\3\2\2\2")
-        buf.write("H\u0239\3\2\2\2JN\b\2\1\2KM\5\6\4\2LK\3\2\2\2MP\3\2\2")
+        buf.write("\2\2\22\u00fb\3\2\2\2\24\u011b\3\2\2\2\26\u011d\3\2\2")
+        buf.write("\2\30\u0132\3\2\2\2\32\u014f\3\2\2\2\34\u0151\3\2\2\2")
+        buf.write("\36\u0161\3\2\2\2 \u016a\3\2\2\2\"\u017a\3\2\2\2$\u0194")
+        buf.write("\3\2\2\2&\u0196\3\2\2\2(\u01a0\3\2\2\2*\u01a2\3\2\2\2")
+        buf.write(",\u01b8\3\2\2\2.\u01c0\3\2\2\2\60\u01c6\3\2\2\2\62\u01ce")
+        buf.write("\3\2\2\2\64\u01d8\3\2\2\2\66\u01de\3\2\2\28\u01e6\3\2")
+        buf.write("\2\2:\u01ec\3\2\2\2<\u01fc\3\2\2\2>\u0204\3\2\2\2@\u020c")
+        buf.write("\3\2\2\2B\u0214\3\2\2\2D\u021a\3\2\2\2F\u0220\3\2\2\2")
+        buf.write("H\u0233\3\2\2\2JN\b\2\1\2KM\5\6\4\2LK\3\2\2\2MP\3\2\2")
         buf.write("\2NL\3\2\2\2NO\3\2\2\2OT\3\2\2\2PN\3\2\2\2QS\5\b\5\2R")
         buf.write("Q\3\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2UW\3\2\2\2VT\3")
         buf.write("\2\2\2WX\5\4\3\2XY\b\2\1\2Y\3\3\2\2\2Z[\b\3\1\2[\\\7\4")
@@ -150,133 +149,131 @@ def serializedATN():
         buf.write("\2\2\2\u010a\u0108\3\2\2\2\u010b\u00ff\3\2\2\2\u010b\u010c")
         buf.write("\3\2\2\2\u010c\u010d\3\2\2\2\u010d\u010e\79\2\2\u010e")
         buf.write("\u010f\b\n\1\2\u010f\u0110\7\60\2\2\u0110\23\3\2\2\2\u0111")
-        buf.write("\u011a\5(\25\2\u0112\u011a\5\30\r\2\u0113\u011a\5,\27")
-        buf.write("\2\u0114\u011a\5\20\t\2\u0115\u011a\5\22\n\2\u0116\u011a")
-        buf.write("\5*\26\2\u0117\u011a\5H%\2\u0118\u011a\5\26\f\2\u0119")
-        buf.write("\u0111\3\2\2\2\u0119\u0112\3\2\2\2\u0119\u0113\3\2\2\2")
-        buf.write("\u0119\u0114\3\2\2\2\u0119\u0115\3\2\2\2\u0119\u0116\3")
-        buf.write("\2\2\2\u0119\u0117\3\2\2\2\u0119\u0118\3\2\2\2\u011a\25")
-        buf.write("\3\2\2\2\u011b\u011c\7J\2\2\u011c\u0124\b\f\1\2\u011d")
-        buf.write("\u011e\7\66\2\2\u011e\u011f\5\34\17\2\u011f\u0120\b\f")
-        buf.write("\1\2\u0120\u0121\7\67\2\2\u0121\u0123\3\2\2\2\u0122\u011d")
-        buf.write("\3\2\2\2\u0123\u0126\3\2\2\2\u0124\u0122\3\2\2\2\u0124")
-        buf.write("\u0125\3\2\2\2\u0125\u0127\3\2\2\2\u0126\u0124\3\2\2\2")
-        buf.write("\u0127\u0128\7:\2\2\u0128\u012d\b\f\1\2\u0129\u012e\5")
-        buf.write("H%\2\u012a\u012b\5\34\17\2\u012b\u012c\7\60\2\2\u012c")
-        buf.write("\u012e\3\2\2\2\u012d\u0129\3\2\2\2\u012d\u012a\3\2\2\2")
-        buf.write("\u012e\u012f\3\2\2\2\u012f\u0130\b\f\1\2\u0130\27\3\2")
-        buf.write("\2\2\u0131\u0132\7\7\2\2\u0132\u0133\78\2\2\u0133\u0134")
-        buf.write("\b\r\1\2\u0134\u0135\5\34\17\2\u0135\u0136\79\2\2\u0136")
-        buf.write("\u0137\b\r\1\2\u0137\u013b\5\n\6\2\u0138\u0139\7\b\2\2")
-        buf.write("\u0139\u013a\b\r\1\2\u013a\u013c\5\n\6\2\u013b\u0138\3")
-        buf.write("\2\2\2\u013b\u013c\3\2\2\2\u013c\u013d\3\2\2\2\u013d\u013e")
-        buf.write("\b\r\1\2\u013e\31\3\2\2\2\u013f\u0140\5\16\b\2\u0140\u0141")
-        buf.write("\b\16\1\2\u0141\u015b\3\2\2\2\u0142\u0143\7J\2\2\u0143")
-        buf.write("\u014a\b\16\1\2\u0144\u0145\7\66\2\2\u0145\u0146\5\34")
-        buf.write("\17\2\u0146\u0147\7\67\2\2\u0147\u0149\3\2\2\2\u0148\u0144")
-        buf.write("\3\2\2\2\u0149\u014c\3\2\2\2\u014a\u0148\3\2\2\2\u014a")
-        buf.write("\u014b\3\2\2\2\u014b\u015b\3\2\2\2\u014c\u014a\3\2\2\2")
-        buf.write("\u014d\u014e\7J\2\2\u014e\u014f\78\2\2\u014f\u0150\b\16")
-        buf.write("\1\2\u0150\u0155\5\34\17\2\u0151\u0152\7\62\2\2\u0152")
-        buf.write("\u0154\5\34\17\2\u0153\u0151\3\2\2\2\u0154\u0157\3\2\2")
-        buf.write("\2\u0155\u0153\3\2\2\2\u0155\u0156\3\2\2\2\u0156\u0158")
-        buf.write("\3\2\2\2\u0157\u0155\3\2\2\2\u0158\u0159\79\2\2\u0159")
-        buf.write("\u015b\3\2\2\2\u015a\u013f\3\2\2\2\u015a\u0142\3\2\2\2")
-        buf.write("\u015a\u014d\3\2\2\2\u015b\33\3\2\2\2\u015c\u015d\5\36")
-        buf.write("\20\2\u015d\u0169\b\17\1\2\u015e\u015f\7A\2\2\u015f\u0163")
-        buf.write("\b\17\1\2\u0160\u0161\7B\2\2\u0161\u0163\b\17\1\2\u0162")
-        buf.write("\u015e\3\2\2\2\u0162\u0160\3\2\2\2\u0163\u0164\3\2\2\2")
-        buf.write("\u0164\u0165\5\36\20\2\u0165\u0166\b\17\1\2\u0166\u0168")
-        buf.write("\3\2\2\2\u0167\u0162\3\2\2\2\u0168\u016b\3\2\2\2\u0169")
-        buf.write("\u0167\3\2\2\2\u0169\u016a\3\2\2\2\u016a\35\3\2\2\2\u016b")
-        buf.write("\u0169\3\2\2\2\u016c\u016d\5 \21\2\u016d\u0173\b\20\1")
-        buf.write("\2\u016e\u016f\5&\24\2\u016f\u0170\b\20\1\2\u0170\u0171")
-        buf.write("\5 \21\2\u0171\u0172\b\20\1\2\u0172\u0174\3\2\2\2\u0173")
-        buf.write("\u016e\3\2\2\2\u0173\u0174\3\2\2\2\u0174\37\3\2\2\2\u0175")
-        buf.write("\u0176\5\"\22\2\u0176\u0182\b\21\1\2\u0177\u0178\7D\2")
-        buf.write("\2\u0178\u017c\b\21\1\2\u0179\u017a\7E\2\2\u017a\u017c")
-        buf.write("\b\21\1\2\u017b\u0177\3\2\2\2\u017b\u0179\3\2\2\2\u017c")
-        buf.write("\u017d\3\2\2\2\u017d\u017e\5\"\22\2\u017e\u017f\b\21\1")
-        buf.write("\2\u017f\u0181\3\2\2\2\u0180\u017b\3\2\2\2\u0181\u0184")
-        buf.write("\3\2\2\2\u0182\u0180\3\2\2\2\u0182\u0183\3\2\2\2\u0183")
-        buf.write("!\3\2\2\2\u0184\u0182\3\2\2\2\u0185\u0186\5$\23\2\u0186")
-        buf.write("\u0192\b\22\1\2\u0187\u0188\7F\2\2\u0188\u018c\b\22\1")
-        buf.write("\2\u0189\u018a\7G\2\2\u018a\u018c\b\22\1\2\u018b\u0187")
-        buf.write("\3\2\2\2\u018b\u0189\3\2\2\2\u018c\u018d\3\2\2\2\u018d")
-        buf.write("\u018e\5$\23\2\u018e\u018f\b\22\1\2\u018f\u0191\3\2\2")
-        buf.write("\2\u0190\u018b\3\2\2\2\u0191\u0194\3\2\2\2\u0192\u0190")
-        buf.write("\3\2\2\2\u0192\u0193\3\2\2\2\u0193#\3\2\2\2\u0194\u0192")
-        buf.write("\3\2\2\2\u0195\u0196\78\2\2\u0196\u0197\b\23\1\2\u0197")
-        buf.write("\u0198\5\34\17\2\u0198\u0199\79\2\2\u0199\u019a\b\23\1")
-        buf.write("\2\u019a\u01a0\3\2\2\2\u019b\u019d\t\3\2\2\u019c\u019b")
-        buf.write("\3\2\2\2\u019c\u019d\3\2\2\2\u019d\u019e\3\2\2\2\u019e")
-        buf.write("\u01a0\5\32\16\2\u019f\u0195\3\2\2\2\u019f\u019c\3\2\2")
-        buf.write("\2\u01a0%\3\2\2\2\u01a1\u01a2\t\4\2\2\u01a2\'\3\2\2\2")
-        buf.write("\u01a3\u01a5\7\6\2\2\u01a4\u01a6\5\34\17\2\u01a5\u01a4")
-        buf.write("\3\2\2\2\u01a5\u01a6\3\2\2\2\u01a6\u01a7\3\2\2\2\u01a7")
-        buf.write("\u01a8\7\60\2\2\u01a8)\3\2\2\2\u01a9\u01aa\7J\2\2\u01aa")
-        buf.write("\u01ab\b\26\1\2\u01ab\u01b7\78\2\2\u01ac\u01ad\5\34\17")
-        buf.write("\2\u01ad\u01b4\b\26\1\2\u01ae\u01af\7\62\2\2\u01af\u01b0")
-        buf.write("\5\34\17\2\u01b0\u01b1\b\26\1\2\u01b1\u01b3\3\2\2\2\u01b2")
-        buf.write("\u01ae\3\2\2\2\u01b3\u01b6\3\2\2\2\u01b4\u01b2\3\2\2\2")
-        buf.write("\u01b4\u01b5\3\2\2\2\u01b5\u01b8\3\2\2\2\u01b6\u01b4\3")
-        buf.write("\2\2\2\u01b7\u01ac\3\2\2\2\u01b7\u01b8\3\2\2\2\u01b8\u01b9")
-        buf.write("\3\2\2\2\u01b9\u01ba\79\2\2\u01ba\u01bb\b\26\1\2\u01bb")
-        buf.write("\u01bc\7\60\2\2\u01bc\u01bd\b\26\1\2\u01bd+\3\2\2\2\u01be")
-        buf.write("\u01bf\7\t\2\2\u01bf\u01c0\78\2\2\u01c0\u01c1\5\34\17")
-        buf.write("\2\u01c1\u01c2\b\27\1\2\u01c2\u01c3\79\2\2\u01c3\u01c4")
-        buf.write("\5\n\6\2\u01c4\u01c5\b\27\1\2\u01c5-\3\2\2\2\u01c6\u01c7")
-        buf.write("\7\16\2\2\u01c7\u01c8\78\2\2\u01c8\u01c9\7L\2\2\u01c9")
-        buf.write("\u01ca\79\2\2\u01ca\u01cb\7\60\2\2\u01cb/\3\2\2\2\u01cc")
-        buf.write("\u01cd\7\17\2\2\u01cd\u01ce\78\2\2\u01ce\u01cf\7J\2\2")
-        buf.write("\u01cf\u01d0\7\62\2\2\u01d0\u01d1\7L\2\2\u01d1\u01d2\7")
-        buf.write("9\2\2\u01d2\u01d3\7\60\2\2\u01d3\61\3\2\2\2\u01d4\u01d5")
-        buf.write("\7\21\2\2\u01d5\u01d6\78\2\2\u01d6\u01d7\7J\2\2\u01d7")
-        buf.write("\u01d8\7\62\2\2\u01d8\u01d9\t\5\2\2\u01d9\u01da\7\62\2")
-        buf.write("\2\u01da\u01db\t\5\2\2\u01db\u01dc\79\2\2\u01dc\u01dd")
-        buf.write("\7\60\2\2\u01dd\63\3\2\2\2\u01de\u01df\7\20\2\2\u01df")
-        buf.write("\u01e0\78\2\2\u01e0\u01e1\7J\2\2\u01e1\u01e2\79\2\2\u01e2")
-        buf.write("\u01e3\7\60\2\2\u01e3\65\3\2\2\2\u01e4\u01e5\7\21\2\2")
-        buf.write("\u01e5\u01e6\78\2\2\u01e6\u01e7\7J\2\2\u01e7\u01e8\7\62")
-        buf.write("\2\2\u01e8\u01e9\t\5\2\2\u01e9\u01ea\79\2\2\u01ea\u01eb")
-        buf.write("\7\60\2\2\u01eb\67\3\2\2\2\u01ec\u01ed\7\23\2\2\u01ed")
-        buf.write("\u01ee\78\2\2\u01ee\u01ef\7J\2\2\u01ef\u01f0\79\2\2\u01f0")
-        buf.write("\u01f1\7\60\2\2\u01f19\3\2\2\2\u01f2\u01f3\7\24\2\2\u01f3")
-        buf.write("\u01f4\78\2\2\u01f4\u01f5\7J\2\2\u01f5\u01f7\7\62\2\2")
-        buf.write("\u01f6\u01f8\t\3\2\2\u01f7\u01f6\3\2\2\2\u01f7\u01f8\3")
-        buf.write("\2\2\2\u01f8\u01f9\3\2\2\2\u01f9\u01fa\t\6\2\2\u01fa\u01fc")
-        buf.write("\7\62\2\2\u01fb\u01fd\t\3\2\2\u01fc\u01fb\3\2\2\2\u01fc")
-        buf.write("\u01fd\3\2\2\2\u01fd\u01fe\3\2\2\2\u01fe\u01ff\t\6\2\2")
-        buf.write("\u01ff\u0200\79\2\2\u0200\u0201\7\60\2\2\u0201;\3\2\2")
-        buf.write("\2\u0202\u0203\7\25\2\2\u0203\u0204\78\2\2\u0204\u0205")
-        buf.write("\7J\2\2\u0205\u0206\7\62\2\2\u0206\u0207\t\6\2\2\u0207")
-        buf.write("\u0208\79\2\2\u0208\u0209\7\60\2\2\u0209=\3\2\2\2\u020a")
-        buf.write("\u020b\7\26\2\2\u020b\u020c\78\2\2\u020c\u020d\7J\2\2")
-        buf.write("\u020d\u020e\7\62\2\2\u020e\u020f\7J\2\2\u020f\u0210\7")
-        buf.write("9\2\2\u0210\u0211\7\60\2\2\u0211?\3\2\2\2\u0212\u0213")
-        buf.write("\7\27\2\2\u0213\u0214\78\2\2\u0214\u0215\7J\2\2\u0215")
-        buf.write("\u0216\7\62\2\2\u0216\u0217\7L\2\2\u0217\u0218\79\2\2")
-        buf.write("\u0218\u0219\7\60\2\2\u0219A\3\2\2\2\u021a\u021b\7\30")
-        buf.write("\2\2\u021b\u021c\78\2\2\u021c\u021d\7J\2\2\u021d\u021e")
-        buf.write("\79\2\2\u021e\u021f\7\60\2\2\u021fC\3\2\2\2\u0220\u0221")
-        buf.write("\7\31\2\2\u0221\u0222\78\2\2\u0222\u0223\7L\2\2\u0223")
-        buf.write("\u0224\79\2\2\u0224\u0225\7\60\2\2\u0225E\3\2\2\2\u0226")
-        buf.write("\u0227\7\32\2\2\u0227\u0228\78\2\2\u0228\u0229\7L\2\2")
-        buf.write("\u0229\u022a\79\2\2\u022a\u022b\7\60\2\2\u022bG\3\2\2")
-        buf.write("\2\u022c\u023a\5.\30\2\u022d\u023a\5\60\31\2\u022e\u023a")
-        buf.write("\5\64\33\2\u022f\u023a\5\62\32\2\u0230\u023a\5\66\34\2")
-        buf.write("\u0231\u023a\58\35\2\u0232\u023a\5:\36\2\u0233\u023a\5")
-        buf.write("<\37\2\u0234\u023a\5> \2\u0235\u023a\5@!\2\u0236\u023a")
-        buf.write("\5B\"\2\u0237\u023a\5D#\2\u0238\u023a\5F$\2\u0239\u022c")
-        buf.write("\3\2\2\2\u0239\u022d\3\2\2\2\u0239\u022e\3\2\2\2\u0239")
-        buf.write("\u022f\3\2\2\2\u0239\u0230\3\2\2\2\u0239\u0231\3\2\2\2")
-        buf.write("\u0239\u0232\3\2\2\2\u0239\u0233\3\2\2\2\u0239\u0234\3")
-        buf.write("\2\2\2\u0239\u0235\3\2\2\2\u0239\u0236\3\2\2\2\u0239\u0237")
-        buf.write("\3\2\2\2\u0239\u0238\3\2\2\2\u023aI\3\2\2\2,NTekz\u0082")
-        buf.write("\u008d\u0095\u009a\u00a8\u00b5\u00b8\u00c0\u00c6\u00d0")
-        buf.write("\u00d6\u00e7\u00f4\u0108\u010b\u0119\u0124\u012d\u013b")
-        buf.write("\u014a\u0155\u015a\u0162\u0169\u0173\u017b\u0182\u018b")
-        buf.write("\u0192\u019c\u019f\u01a5\u01b4\u01b7\u01f7\u01fc\u0239")
+        buf.write("\u011c\5(\25\2\u0112\u011c\5\30\r\2\u0113\u011c\5,\27")
+        buf.write("\2\u0114\u011c\5\20\t\2\u0115\u011c\5\22\n\2\u0116\u0117")
+        buf.write("\5*\26\2\u0117\u0118\7\60\2\2\u0118\u011c\3\2\2\2\u0119")
+        buf.write("\u011c\5H%\2\u011a\u011c\5\26\f\2\u011b\u0111\3\2\2\2")
+        buf.write("\u011b\u0112\3\2\2\2\u011b\u0113\3\2\2\2\u011b\u0114\3")
+        buf.write("\2\2\2\u011b\u0115\3\2\2\2\u011b\u0116\3\2\2\2\u011b\u0119")
+        buf.write("\3\2\2\2\u011b\u011a\3\2\2\2\u011c\25\3\2\2\2\u011d\u011e")
+        buf.write("\7J\2\2\u011e\u0126\b\f\1\2\u011f\u0120\7\66\2\2\u0120")
+        buf.write("\u0121\5\34\17\2\u0121\u0122\b\f\1\2\u0122\u0123\7\67")
+        buf.write("\2\2\u0123\u0125\3\2\2\2\u0124\u011f\3\2\2\2\u0125\u0128")
+        buf.write("\3\2\2\2\u0126\u0124\3\2\2\2\u0126\u0127\3\2\2\2\u0127")
+        buf.write("\u0129\3\2\2\2\u0128\u0126\3\2\2\2\u0129\u012a\7:\2\2")
+        buf.write("\u012a\u012d\b\f\1\2\u012b\u012e\5H%\2\u012c\u012e\5\34")
+        buf.write("\17\2\u012d\u012b\3\2\2\2\u012d\u012c\3\2\2\2\u012e\u012f")
+        buf.write("\3\2\2\2\u012f\u0130\7\60\2\2\u0130\u0131\b\f\1\2\u0131")
+        buf.write("\27\3\2\2\2\u0132\u0133\7\7\2\2\u0133\u0134\78\2\2\u0134")
+        buf.write("\u0135\b\r\1\2\u0135\u0136\5\34\17\2\u0136\u0137\79\2")
+        buf.write("\2\u0137\u0138\b\r\1\2\u0138\u013c\5\n\6\2\u0139\u013a")
+        buf.write("\7\b\2\2\u013a\u013b\b\r\1\2\u013b\u013d\5\n\6\2\u013c")
+        buf.write("\u0139\3\2\2\2\u013c\u013d\3\2\2\2\u013d\u013e\3\2\2\2")
+        buf.write("\u013e\u013f\b\r\1\2\u013f\31\3\2\2\2\u0140\u0141\5\16")
+        buf.write("\b\2\u0141\u0142\b\16\1\2\u0142\u0150\3\2\2\2\u0143\u0150")
+        buf.write("\5*\26\2\u0144\u0145\7J\2\2\u0145\u014c\b\16\1\2\u0146")
+        buf.write("\u0147\7\66\2\2\u0147\u0148\5\34\17\2\u0148\u0149\7\67")
+        buf.write("\2\2\u0149\u014b\3\2\2\2\u014a\u0146\3\2\2\2\u014b\u014e")
+        buf.write("\3\2\2\2\u014c\u014a\3\2\2\2\u014c\u014d\3\2\2\2\u014d")
+        buf.write("\u0150\3\2\2\2\u014e\u014c\3\2\2\2\u014f\u0140\3\2\2\2")
+        buf.write("\u014f\u0143\3\2\2\2\u014f\u0144\3\2\2\2\u0150\33\3\2")
+        buf.write("\2\2\u0151\u0152\5\36\20\2\u0152\u015e\b\17\1\2\u0153")
+        buf.write("\u0154\7A\2\2\u0154\u0158\b\17\1\2\u0155\u0156\7B\2\2")
+        buf.write("\u0156\u0158\b\17\1\2\u0157\u0153\3\2\2\2\u0157\u0155")
+        buf.write("\3\2\2\2\u0158\u0159\3\2\2\2\u0159\u015a\5\36\20\2\u015a")
+        buf.write("\u015b\b\17\1\2\u015b\u015d\3\2\2\2\u015c\u0157\3\2\2")
+        buf.write("\2\u015d\u0160\3\2\2\2\u015e\u015c\3\2\2\2\u015e\u015f")
+        buf.write("\3\2\2\2\u015f\35\3\2\2\2\u0160\u015e\3\2\2\2\u0161\u0162")
+        buf.write("\5 \21\2\u0162\u0168\b\20\1\2\u0163\u0164\5&\24\2\u0164")
+        buf.write("\u0165\b\20\1\2\u0165\u0166\5 \21\2\u0166\u0167\b\20\1")
+        buf.write("\2\u0167\u0169\3\2\2\2\u0168\u0163\3\2\2\2\u0168\u0169")
+        buf.write("\3\2\2\2\u0169\37\3\2\2\2\u016a\u016b\5\"\22\2\u016b\u0177")
+        buf.write("\b\21\1\2\u016c\u016d\7D\2\2\u016d\u0171\b\21\1\2\u016e")
+        buf.write("\u016f\7E\2\2\u016f\u0171\b\21\1\2\u0170\u016c\3\2\2\2")
+        buf.write("\u0170\u016e\3\2\2\2\u0171\u0172\3\2\2\2\u0172\u0173\5")
+        buf.write("\"\22\2\u0173\u0174\b\21\1\2\u0174\u0176\3\2\2\2\u0175")
+        buf.write("\u0170\3\2\2\2\u0176\u0179\3\2\2\2\u0177\u0175\3\2\2\2")
+        buf.write("\u0177\u0178\3\2\2\2\u0178!\3\2\2\2\u0179\u0177\3\2\2")
+        buf.write("\2\u017a\u017b\5$\23\2\u017b\u0187\b\22\1\2\u017c\u017d")
+        buf.write("\7F\2\2\u017d\u0181\b\22\1\2\u017e\u017f\7G\2\2\u017f")
+        buf.write("\u0181\b\22\1\2\u0180\u017c\3\2\2\2\u0180\u017e\3\2\2")
+        buf.write("\2\u0181\u0182\3\2\2\2\u0182\u0183\5$\23\2\u0183\u0184")
+        buf.write("\b\22\1\2\u0184\u0186\3\2\2\2\u0185\u0180\3\2\2\2\u0186")
+        buf.write("\u0189\3\2\2\2\u0187\u0185\3\2\2\2\u0187\u0188\3\2\2\2")
+        buf.write("\u0188#\3\2\2\2\u0189\u0187\3\2\2\2\u018a\u018b\78\2\2")
+        buf.write("\u018b\u018c\b\23\1\2\u018c\u018d\5\34\17\2\u018d\u018e")
+        buf.write("\79\2\2\u018e\u018f\b\23\1\2\u018f\u0195\3\2\2\2\u0190")
+        buf.write("\u0192\t\3\2\2\u0191\u0190\3\2\2\2\u0191\u0192\3\2\2\2")
+        buf.write("\u0192\u0193\3\2\2\2\u0193\u0195\5\32\16\2\u0194\u018a")
+        buf.write("\3\2\2\2\u0194\u0191\3\2\2\2\u0195%\3\2\2\2\u0196\u0197")
+        buf.write("\t\4\2\2\u0197\'\3\2\2\2\u0198\u0199\7\6\2\2\u0199\u019a")
+        buf.write("\5\34\17\2\u019a\u019b\b\25\1\2\u019b\u019c\7\60\2\2\u019c")
+        buf.write("\u01a1\3\2\2\2\u019d\u019e\7\6\2\2\u019e\u019f\b\25\1")
+        buf.write("\2\u019f\u01a1\7\60\2\2\u01a0\u0198\3\2\2\2\u01a0\u019d")
+        buf.write("\3\2\2\2\u01a1)\3\2\2\2\u01a2\u01a3\7J\2\2\u01a3\u01a4")
+        buf.write("\b\26\1\2\u01a4\u01a5\78\2\2\u01a5\u01b1\b\26\1\2\u01a6")
+        buf.write("\u01a7\5\34\17\2\u01a7\u01ae\b\26\1\2\u01a8\u01a9\7\62")
+        buf.write("\2\2\u01a9\u01aa\5\34\17\2\u01aa\u01ab\b\26\1\2\u01ab")
+        buf.write("\u01ad\3\2\2\2\u01ac\u01a8\3\2\2\2\u01ad\u01b0\3\2\2\2")
+        buf.write("\u01ae\u01ac\3\2\2\2\u01ae\u01af\3\2\2\2\u01af\u01b2\3")
+        buf.write("\2\2\2\u01b0\u01ae\3\2\2\2\u01b1\u01a6\3\2\2\2\u01b1\u01b2")
+        buf.write("\3\2\2\2\u01b2\u01b3\3\2\2\2\u01b3\u01b4\79\2\2\u01b4")
+        buf.write("\u01b5\b\26\1\2\u01b5\u01b6\b\26\1\2\u01b6\u01b7\b\26")
+        buf.write("\1\2\u01b7+\3\2\2\2\u01b8\u01b9\7\t\2\2\u01b9\u01ba\7")
+        buf.write("8\2\2\u01ba\u01bb\5\34\17\2\u01bb\u01bc\b\27\1\2\u01bc")
+        buf.write("\u01bd\79\2\2\u01bd\u01be\5\n\6\2\u01be\u01bf\b\27\1\2")
+        buf.write("\u01bf-\3\2\2\2\u01c0\u01c1\7\16\2\2\u01c1\u01c2\78\2")
+        buf.write("\2\u01c2\u01c3\7L\2\2\u01c3\u01c4\79\2\2\u01c4\u01c5\7")
+        buf.write("\60\2\2\u01c5/\3\2\2\2\u01c6\u01c7\7\17\2\2\u01c7\u01c8")
+        buf.write("\78\2\2\u01c8\u01c9\7J\2\2\u01c9\u01ca\7\62\2\2\u01ca")
+        buf.write("\u01cb\7L\2\2\u01cb\u01cc\79\2\2\u01cc\u01cd\7\60\2\2")
+        buf.write("\u01cd\61\3\2\2\2\u01ce\u01cf\7\21\2\2\u01cf\u01d0\78")
+        buf.write("\2\2\u01d0\u01d1\7J\2\2\u01d1\u01d2\7\62\2\2\u01d2\u01d3")
+        buf.write("\t\5\2\2\u01d3\u01d4\7\62\2\2\u01d4\u01d5\t\5\2\2\u01d5")
+        buf.write("\u01d6\79\2\2\u01d6\u01d7\7\60\2\2\u01d7\63\3\2\2\2\u01d8")
+        buf.write("\u01d9\7\20\2\2\u01d9\u01da\78\2\2\u01da\u01db\7J\2\2")
+        buf.write("\u01db\u01dc\79\2\2\u01dc\u01dd\7\60\2\2\u01dd\65\3\2")
+        buf.write("\2\2\u01de\u01df\7\21\2\2\u01df\u01e0\78\2\2\u01e0\u01e1")
+        buf.write("\7J\2\2\u01e1\u01e2\7\62\2\2\u01e2\u01e3\t\5\2\2\u01e3")
+        buf.write("\u01e4\79\2\2\u01e4\u01e5\7\60\2\2\u01e5\67\3\2\2\2\u01e6")
+        buf.write("\u01e7\7\23\2\2\u01e7\u01e8\78\2\2\u01e8\u01e9\7J\2\2")
+        buf.write("\u01e9\u01ea\79\2\2\u01ea\u01eb\7\60\2\2\u01eb9\3\2\2")
+        buf.write("\2\u01ec\u01ed\7\24\2\2\u01ed\u01ee\78\2\2\u01ee\u01ef")
+        buf.write("\7J\2\2\u01ef\u01f1\7\62\2\2\u01f0\u01f2\t\3\2\2\u01f1")
+        buf.write("\u01f0\3\2\2\2\u01f1\u01f2\3\2\2\2\u01f2\u01f3\3\2\2\2")
+        buf.write("\u01f3\u01f4\t\6\2\2\u01f4\u01f6\7\62\2\2\u01f5\u01f7")
+        buf.write("\t\3\2\2\u01f6\u01f5\3\2\2\2\u01f6\u01f7\3\2\2\2\u01f7")
+        buf.write("\u01f8\3\2\2\2\u01f8\u01f9\t\6\2\2\u01f9\u01fa\79\2\2")
+        buf.write("\u01fa\u01fb\7\60\2\2\u01fb;\3\2\2\2\u01fc\u01fd\7\25")
+        buf.write("\2\2\u01fd\u01fe\78\2\2\u01fe\u01ff\7J\2\2\u01ff\u0200")
+        buf.write("\7\62\2\2\u0200\u0201\t\6\2\2\u0201\u0202\79\2\2\u0202")
+        buf.write("\u0203\7\60\2\2\u0203=\3\2\2\2\u0204\u0205\7\26\2\2\u0205")
+        buf.write("\u0206\78\2\2\u0206\u0207\7J\2\2\u0207\u0208\7\62\2\2")
+        buf.write("\u0208\u0209\7J\2\2\u0209\u020a\79\2\2\u020a\u020b\7\60")
+        buf.write("\2\2\u020b?\3\2\2\2\u020c\u020d\7\27\2\2\u020d\u020e\7")
+        buf.write("8\2\2\u020e\u020f\7J\2\2\u020f\u0210\7\62\2\2\u0210\u0211")
+        buf.write("\7L\2\2\u0211\u0212\79\2\2\u0212\u0213\7\60\2\2\u0213")
+        buf.write("A\3\2\2\2\u0214\u0215\7\30\2\2\u0215\u0216\78\2\2\u0216")
+        buf.write("\u0217\7J\2\2\u0217\u0218\79\2\2\u0218\u0219\7\60\2\2")
+        buf.write("\u0219C\3\2\2\2\u021a\u021b\7\31\2\2\u021b\u021c\78\2")
+        buf.write("\2\u021c\u021d\7L\2\2\u021d\u021e\79\2\2\u021e\u021f\7")
+        buf.write("\60\2\2\u021fE\3\2\2\2\u0220\u0221\7\32\2\2\u0221\u0222")
+        buf.write("\78\2\2\u0222\u0223\7L\2\2\u0223\u0224\79\2\2\u0224\u0225")
+        buf.write("\7\60\2\2\u0225G\3\2\2\2\u0226\u0234\5.\30\2\u0227\u0234")
+        buf.write("\5\60\31\2\u0228\u0234\5\64\33\2\u0229\u0234\5\62\32\2")
+        buf.write("\u022a\u0234\5\66\34\2\u022b\u0234\58\35\2\u022c\u0234")
+        buf.write("\5:\36\2\u022d\u0234\5<\37\2\u022e\u0234\5> \2\u022f\u0234")
+        buf.write("\5@!\2\u0230\u0234\5B\"\2\u0231\u0234\5D#\2\u0232\u0234")
+        buf.write("\5F$\2\u0233\u0226\3\2\2\2\u0233\u0227\3\2\2\2\u0233\u0228")
+        buf.write("\3\2\2\2\u0233\u0229\3\2\2\2\u0233\u022a\3\2\2\2\u0233")
+        buf.write("\u022b\3\2\2\2\u0233\u022c\3\2\2\2\u0233\u022d\3\2\2\2")
+        buf.write("\u0233\u022e\3\2\2\2\u0233\u022f\3\2\2\2\u0233\u0230\3")
+        buf.write("\2\2\2\u0233\u0231\3\2\2\2\u0233\u0232\3\2\2\2\u0234I")
+        buf.write("\3\2\2\2+NTekz\u0082\u008d\u0095\u009a\u00a8\u00b5\u00b8")
+        buf.write("\u00c0\u00c6\u00d0\u00d6\u00e7\u00f4\u0108\u010b\u011b")
+        buf.write("\u0126\u012d\u013c\u014c\u014f\u0157\u015e\u0168\u0170")
+        buf.write("\u0177\u0180\u0187\u0191\u0194\u01a0\u01ae\u01b1\u01f1")
+        buf.write("\u01f6\u0233")
         return buf.getvalue()
 
 
@@ -1445,6 +1442,9 @@ class QuetzalParser ( Parser ):
             return self.getTypedRuleContext(QuetzalParser.CallfuncContext,0)
 
 
+        def SYM_SEMI_COL(self):
+            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
+
         def specfunct(self):
             return self.getTypedRuleContext(QuetzalParser.SpecfunctContext,0)
 
@@ -1472,7 +1472,7 @@ class QuetzalParser ( Parser ):
         localctx = QuetzalParser.StatuteContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_statute)
         try:
-            self.state = 279
+            self.state = 281
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,20,self._ctx)
             if la_ == 1:
@@ -1509,17 +1509,19 @@ class QuetzalParser ( Parser ):
                 self.enterOuterAlt(localctx, 6)
                 self.state = 276
                 self.callfunc()
+                self.state = 277
+                self.match(QuetzalParser.SYM_SEMI_COL)
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 277
+                self.state = 279
                 self.specfunct()
                 pass
 
             elif la_ == 8:
                 self.enterOuterAlt(localctx, 8)
-                self.state = 278
+                self.state = 280
                 self.assignation()
                 pass
 
@@ -1546,15 +1548,12 @@ class QuetzalParser ( Parser ):
         def SYM_ASSIGN(self):
             return self.getToken(QuetzalParser.SYM_ASSIGN, 0)
 
+        def SYM_SEMI_COL(self):
+            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
+
         def specfunct(self):
             return self.getTypedRuleContext(QuetzalParser.SpecfunctContext,0)
 
-
-        def SYM_SQUARE_BRACK_OPEN(self, i:int=None):
-            if i is None:
-                return self.getTokens(QuetzalParser.SYM_SQUARE_BRACK_OPEN)
-            else:
-                return self.getToken(QuetzalParser.SYM_SQUARE_BRACK_OPEN, i)
 
         def expression(self, i:int=None):
             if i is None:
@@ -1563,14 +1562,17 @@ class QuetzalParser ( Parser ):
                 return self.getTypedRuleContext(QuetzalParser.ExpressionContext,i)
 
 
+        def SYM_SQUARE_BRACK_OPEN(self, i:int=None):
+            if i is None:
+                return self.getTokens(QuetzalParser.SYM_SQUARE_BRACK_OPEN)
+            else:
+                return self.getToken(QuetzalParser.SYM_SQUARE_BRACK_OPEN, i)
+
         def SYM_SQUARE_BRACK_CLOSE(self, i:int=None):
             if i is None:
                 return self.getTokens(QuetzalParser.SYM_SQUARE_BRACK_CLOSE)
             else:
                 return self.getToken(QuetzalParser.SYM_SQUARE_BRACK_CLOSE, i)
-
-        def SYM_SEMI_COL(self):
-            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
 
         def getRuleIndex(self):
             return QuetzalParser.RULE_assignation
@@ -1593,43 +1595,43 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 281
+            self.state = 283
             localctx._TYPE_ID = self.match(QuetzalParser.TYPE_ID)
             stack.addOperand(self._input.getText((localctx.start, self._input.LT(-1))))
-            self.state = 290
+            self.state = 292
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==QuetzalParser.SYM_SQUARE_BRACK_OPEN:
-                self.state = 283
+                self.state = 285
                 self.match(QuetzalParser.SYM_SQUARE_BRACK_OPEN)
-                self.state = 284
+                self.state = 286
                 self.expression()
                 stack.dimEnter((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
-                self.state = 286
+                self.state = 288
                 self.match(QuetzalParser.SYM_SQUARE_BRACK_CLOSE)
-                self.state = 292
+                self.state = 294
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 293
+            self.state = 295
             self.match(QuetzalParser.SYM_ASSIGN)
             stack.addOp('=')
             self.state = 299
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [QuetzalParser.TK_OPENIMG, QuetzalParser.TK_SAVEIMG, QuetzalParser.TK_GRAYSCALE, QuetzalParser.TK_COLOR_REPLACE, QuetzalParser.TK_EDGE_DETECTION, QuetzalParser.TK_SCALE_IMAGE, QuetzalParser.TK_GET_COLOR_PALETTE, QuetzalParser.TK_COLOR_MATCH_IMAGE, QuetzalParser.TK_ENCODE_STEGANOGRAPHY, QuetzalParser.TK_DECODE_STEGANOGRAPHY, QuetzalParser.TK_GET_IMAGE_HEIGHT, QuetzalParser.TK_GET_IMAGE_WIDTH]:
-                self.state = 295
+                self.state = 297
                 self.specfunct()
                 pass
             elif token in [QuetzalParser.SYM_PAREN_OPEN, QuetzalParser.SYM_PLUS, QuetzalParser.SYM_MINUS, QuetzalParser.TYPE_FLOAT, QuetzalParser.TYPE_INT, QuetzalParser.TYPE_ID, QuetzalParser.TYPE_COLOR, QuetzalParser.CTE_TAG, QuetzalParser.TYPE_BOOL]:
-                self.state = 296
+                self.state = 298
                 self.expression()
-                self.state = 297
-                self.match(QuetzalParser.SYM_SEMI_COL)
                 pass
             else:
                 raise NoViableAltException(self)
 
+            self.state = 301
+            self.match(QuetzalParser.SYM_SEMI_COL)
             stack.exitAssign()
         except RecognitionException as re:
             localctx.exception = re
@@ -1690,27 +1692,27 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 303
-            self.match(QuetzalParser.TK_IF)
             self.state = 304
+            self.match(QuetzalParser.TK_IF)
+            self.state = 305
             self.match(QuetzalParser.SYM_PAREN_OPEN)
             stack.addOp('(')
-            self.state = 306
-            self.expression()
             self.state = 307
+            self.expression()
+            self.state = 308
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
             stack.removeP()
             stack.enterCondition()
-            self.state = 309
+            self.state = 310
             self.block()
-            self.state = 313
+            self.state = 314
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==QuetzalParser.TK_ELSE:
-                self.state = 310
+                self.state = 311
                 self.match(QuetzalParser.TK_ELSE)
                 stack.enterElse()
-                self.state = 312
+                self.state = 313
                 self.block()
 
 
@@ -1732,6 +1734,10 @@ class QuetzalParser ( Parser ):
 
         def constants(self):
             return self.getTypedRuleContext(QuetzalParser.ConstantsContext,0)
+
+
+        def callfunc(self):
+            return self.getTypedRuleContext(QuetzalParser.CallfuncContext,0)
 
 
         def TYPE_ID(self):
@@ -1756,18 +1762,6 @@ class QuetzalParser ( Parser ):
             else:
                 return self.getToken(QuetzalParser.SYM_SQUARE_BRACK_CLOSE, i)
 
-        def SYM_PAREN_OPEN(self):
-            return self.getToken(QuetzalParser.SYM_PAREN_OPEN, 0)
-
-        def SYM_PAREN_CLOSE(self):
-            return self.getToken(QuetzalParser.SYM_PAREN_CLOSE, 0)
-
-        def SYM_COMMA(self, i:int=None):
-            if i is None:
-                return self.getTokens(QuetzalParser.SYM_COMMA)
-            else:
-                return self.getToken(QuetzalParser.SYM_COMMA, i)
-
         def getRuleIndex(self):
             return QuetzalParser.RULE_var_cte
 
@@ -1788,60 +1782,41 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 24, self.RULE_var_cte)
         self._la = 0 # Token type
         try:
-            self.state = 344
+            self.state = 333
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,26,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,25,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 317
+                self.state = 318
                 self.constants()
                 stack.addConstant(self._input.getText((localctx.start, self._input.LT(-1))))
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 320
-                self.match(QuetzalParser.TYPE_ID)
-                stack.addOperand(self._input.getText((localctx.start, self._input.LT(-1))))
-                self.state = 328
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-                while _la==QuetzalParser.SYM_SQUARE_BRACK_OPEN:
-                    self.state = 322
-                    self.match(QuetzalParser.SYM_SQUARE_BRACK_OPEN)
-                    self.state = 323
-                    self.expression()
-                    self.state = 324
-                    self.match(QuetzalParser.SYM_SQUARE_BRACK_CLOSE)
-                    self.state = 330
-                    self._errHandler.sync(self)
-                    _la = self._input.LA(1)
-
+                self.state = 321
+                self.callfunc()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 331
+                self.state = 322
                 self.match(QuetzalParser.TYPE_ID)
-                self.state = 332
-                self.match(QuetzalParser.SYM_PAREN_OPEN)
-                stack.addOp('(')
-                self.state = 334
-                self.expression()
-                self.state = 339
+                stack.addOperand(self._input.getText((localctx.start, self._input.LT(-1))))
+                self.state = 330
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==QuetzalParser.SYM_COMMA:
-                    self.state = 335
-                    self.match(QuetzalParser.SYM_COMMA)
-                    self.state = 336
+                while _la==QuetzalParser.SYM_SQUARE_BRACK_OPEN:
+                    self.state = 324
+                    self.match(QuetzalParser.SYM_SQUARE_BRACK_OPEN)
+                    self.state = 325
                     self.expression()
-                    self.state = 341
+                    self.state = 326
+                    self.match(QuetzalParser.SYM_SQUARE_BRACK_CLOSE)
+                    self.state = 332
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
-                self.state = 342
-                self.match(QuetzalParser.SYM_PAREN_CLOSE)
                 pass
 
 
@@ -1900,33 +1875,33 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 346
+            self.state = 335
             self.expLogic()
             stack.exitExpLogic()
-            self.state = 359
+            self.state = 348
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==QuetzalParser.SYM_OR or _la==QuetzalParser.SYM_AND:
-                self.state = 352
+                self.state = 341
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [QuetzalParser.SYM_OR]:
-                    self.state = 348
+                    self.state = 337
                     self.match(QuetzalParser.SYM_OR)
                     stack.addOp('||')
                     pass
                 elif token in [QuetzalParser.SYM_AND]:
-                    self.state = 350
+                    self.state = 339
                     self.match(QuetzalParser.SYM_AND)
                     stack.addOp('&&')
                     pass
                 else:
                     raise NoViableAltException(self)
 
-                self.state = 354
+                self.state = 343
                 self.expLogic()
                 stack.exitExpLogic()
-                self.state = 361
+                self.state = 350
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1978,17 +1953,17 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 362
+            self.state = 351
             self.exp()
             stack.exitExp()
-            self.state = 369
+            self.state = 358
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << QuetzalParser.SYM_EQUAL) | (1 << QuetzalParser.SYM_GRE_THAN) | (1 << QuetzalParser.SYM_LOW_THAN) | (1 << QuetzalParser.SYM_NOT_EQUAL) | (1 << QuetzalParser.SYM_GRE_EQ) | (1 << QuetzalParser.SYM_LOW_EQ))) != 0):
-                self.state = 364
+                self.state = 353
                 localctx._logic_op = self.logic_op()
                 stack.addOp((None if localctx._logic_op is None else self._input.getText((localctx._logic_op.start,localctx._logic_op.stop))))
-                self.state = 366
+                self.state = 355
                 self.exp()
                 stack.exitExp()
 
@@ -2048,33 +2023,33 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 371
+            self.state = 360
             self.term()
             stack.exitTerm()
-            self.state = 384
+            self.state = 373
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS:
-                self.state = 377
+                self.state = 366
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [QuetzalParser.SYM_PLUS]:
-                    self.state = 373
+                    self.state = 362
                     self.match(QuetzalParser.SYM_PLUS)
                     stack.addOp('+')
                     pass
                 elif token in [QuetzalParser.SYM_MINUS]:
-                    self.state = 375
+                    self.state = 364
                     self.match(QuetzalParser.SYM_MINUS)
                     stack.addOp('-')
                     pass
                 else:
                     raise NoViableAltException(self)
 
-                self.state = 379
+                self.state = 368
                 self.term()
                 stack.exitTerm()
-                self.state = 386
+                self.state = 375
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -2133,33 +2108,33 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 387
+            self.state = 376
             self.factor()
             stack.exitFactor()
-            self.state = 400
+            self.state = 389
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==QuetzalParser.SYM_MULT or _la==QuetzalParser.SYM_DIV:
-                self.state = 393
+                self.state = 382
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [QuetzalParser.SYM_MULT]:
-                    self.state = 389
+                    self.state = 378
                     self.match(QuetzalParser.SYM_MULT)
                     stack.addOp('*')
                     pass
                 elif token in [QuetzalParser.SYM_DIV]:
-                    self.state = 391
+                    self.state = 380
                     self.match(QuetzalParser.SYM_DIV)
                     stack.addOp('/')
                     pass
                 else:
                     raise NoViableAltException(self)
 
-                self.state = 395
+                self.state = 384
                 self.factor()
                 stack.exitFactor()
-                self.state = 402
+                self.state = 391
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -2218,27 +2193,27 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 34, self.RULE_factor)
         self._la = 0 # Token type
         try:
-            self.state = 413
+            self.state = 402
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [QuetzalParser.SYM_PAREN_OPEN]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 403
+                self.state = 392
                 self.match(QuetzalParser.SYM_PAREN_OPEN)
                 stack.addOp('(')
-                self.state = 405
+                self.state = 394
                 self.expression()
-                self.state = 406
+                self.state = 395
                 self.match(QuetzalParser.SYM_PAREN_CLOSE)
                 stack.removeP()
                 pass
             elif token in [QuetzalParser.SYM_PLUS, QuetzalParser.SYM_MINUS, QuetzalParser.TYPE_FLOAT, QuetzalParser.TYPE_INT, QuetzalParser.TYPE_ID, QuetzalParser.TYPE_COLOR, QuetzalParser.CTE_TAG, QuetzalParser.TYPE_BOOL]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 410
+                self.state = 399
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS:
-                    self.state = 409
+                    self.state = 398
                     _la = self._input.LA(1)
                     if not(_la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS):
                         self._errHandler.recoverInline(self)
@@ -2247,7 +2222,7 @@ class QuetzalParser ( Parser ):
                         self.consume()
 
 
-                self.state = 412
+                self.state = 401
                 self.var_cte()
                 pass
             else:
@@ -2307,7 +2282,7 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 415
+            self.state = 404
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << QuetzalParser.SYM_EQUAL) | (1 << QuetzalParser.SYM_GRE_THAN) | (1 << QuetzalParser.SYM_LOW_THAN) | (1 << QuetzalParser.SYM_NOT_EQUAL) | (1 << QuetzalParser.SYM_GRE_EQ) | (1 << QuetzalParser.SYM_LOW_EQ))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -2332,12 +2307,12 @@ class QuetzalParser ( Parser ):
         def TK_RETURN(self):
             return self.getToken(QuetzalParser.TK_RETURN, 0)
 
-        def SYM_SEMI_COL(self):
-            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
-
         def expression(self):
             return self.getTypedRuleContext(QuetzalParser.ExpressionContext,0)
 
+
+        def SYM_SEMI_COL(self):
+            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
 
         def getRuleIndex(self):
             return QuetzalParser.RULE_returning
@@ -2357,21 +2332,31 @@ class QuetzalParser ( Parser ):
 
         localctx = QuetzalParser.ReturningContext(self, self._ctx, self.state)
         self.enterRule(localctx, 38, self.RULE_returning)
-        self._la = 0 # Token type
         try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 417
-            self.match(QuetzalParser.TK_RETURN)
-            self.state = 419
+            self.state = 414
             self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if ((((_la - 54)) & ~0x3f) == 0 and ((1 << (_la - 54)) & ((1 << (QuetzalParser.SYM_PAREN_OPEN - 54)) | (1 << (QuetzalParser.SYM_PLUS - 54)) | (1 << (QuetzalParser.SYM_MINUS - 54)) | (1 << (QuetzalParser.TYPE_FLOAT - 54)) | (1 << (QuetzalParser.TYPE_INT - 54)) | (1 << (QuetzalParser.TYPE_ID - 54)) | (1 << (QuetzalParser.TYPE_COLOR - 54)) | (1 << (QuetzalParser.CTE_TAG - 54)) | (1 << (QuetzalParser.TYPE_BOOL - 54)))) != 0):
-                self.state = 418
+            la_ = self._interp.adaptivePredict(self._input,35,self._ctx)
+            if la_ == 1:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 406
+                self.match(QuetzalParser.TK_RETURN)
+                self.state = 407
                 self.expression()
+                stack.generateReturn()
+                self.state = 409
+                self.match(QuetzalParser.SYM_SEMI_COL)
+                pass
+
+            elif la_ == 2:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 411
+                self.match(QuetzalParser.TK_RETURN)
+                stack.generateReturnVoid()
+                self.state = 413
+                self.match(QuetzalParser.SYM_SEMI_COL)
+                pass
 
 
-            self.state = 421
-            self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2396,9 +2381,6 @@ class QuetzalParser ( Parser ):
 
         def SYM_PAREN_CLOSE(self):
             return self.getToken(QuetzalParser.SYM_PAREN_CLOSE, 0)
-
-        def SYM_SEMI_COL(self):
-            return self.getToken(QuetzalParser.SYM_SEMI_COL, 0)
 
         def expression(self, i:int=None):
             if i is None:
@@ -2434,38 +2416,38 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 423
+            self.state = 416
             localctx._TYPE_ID = self.match(QuetzalParser.TYPE_ID)
             stack.enterCallFunc((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
-            self.state = 425
+            self.state = 418
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 437
+            stack.addOp('(')
+            self.state = 431
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if ((((_la - 54)) & ~0x3f) == 0 and ((1 << (_la - 54)) & ((1 << (QuetzalParser.SYM_PAREN_OPEN - 54)) | (1 << (QuetzalParser.SYM_PLUS - 54)) | (1 << (QuetzalParser.SYM_MINUS - 54)) | (1 << (QuetzalParser.TYPE_FLOAT - 54)) | (1 << (QuetzalParser.TYPE_INT - 54)) | (1 << (QuetzalParser.TYPE_ID - 54)) | (1 << (QuetzalParser.TYPE_COLOR - 54)) | (1 << (QuetzalParser.CTE_TAG - 54)) | (1 << (QuetzalParser.TYPE_BOOL - 54)))) != 0):
-                self.state = 426
+                self.state = 420
                 self.expression()
                 stack.getParam((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
-                self.state = 434
+                self.state = 428
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==QuetzalParser.SYM_COMMA:
-                    self.state = 428
+                    self.state = 422
                     self.match(QuetzalParser.SYM_COMMA)
-                    self.state = 429
+                    self.state = 423
                     self.expression()
                     stack.getParam((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
-                    self.state = 436
+                    self.state = 430
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
 
 
-            self.state = 439
+            self.state = 433
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
             stack.exitParams((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
-            self.state = 441
-            self.match(QuetzalParser.SYM_SEMI_COL)
+            stack.removeP()
             stack.exitCallFunc((None if localctx._TYPE_ID is None else localctx._TYPE_ID.text))
         except RecognitionException as re:
             localctx.exception = re
@@ -2519,16 +2501,16 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 42, self.RULE_loop)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 444
+            self.state = 438
             self.match(QuetzalParser.TK_WHILE)
-            self.state = 445
+            self.state = 439
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 446
+            self.state = 440
             self.expression()
             stack.enterCicle()
-            self.state = 448
+            self.state = 442
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 449
+            self.state = 443
             self.block()
             stack.exitCicle()
         except RecognitionException as re:
@@ -2581,15 +2563,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 44, self.RULE_openimg)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 452
+            self.state = 446
             self.match(QuetzalParser.TK_OPENIMG)
-            self.state = 453
+            self.state = 447
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 454
+            self.state = 448
             self.match(QuetzalParser.CTE_TAG)
-            self.state = 455
+            self.state = 449
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 456
+            self.state = 450
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -2647,19 +2629,19 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 46, self.RULE_saveimg)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 458
+            self.state = 452
             self.match(QuetzalParser.TK_SAVEIMG)
-            self.state = 459
+            self.state = 453
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 460
+            self.state = 454
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 461
+            self.state = 455
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 462
+            self.state = 456
             self.match(QuetzalParser.CTE_TAG)
-            self.state = 463
+            self.state = 457
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 464
+            self.state = 458
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -2727,33 +2709,33 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 466
+            self.state = 460
             self.match(QuetzalParser.TK_COLOR_REPLACE)
-            self.state = 467
+            self.state = 461
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 468
+            self.state = 462
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 469
+            self.state = 463
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 470
+            self.state = 464
             _la = self._input.LA(1)
             if not(_la==QuetzalParser.TYPE_ID or _la==QuetzalParser.TYPE_COLOR):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 471
+            self.state = 465
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 472
+            self.state = 466
             _la = self._input.LA(1)
             if not(_la==QuetzalParser.TYPE_ID or _la==QuetzalParser.TYPE_COLOR):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 473
+            self.state = 467
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 474
+            self.state = 468
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -2805,15 +2787,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 50, self.RULE_grayscale)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 476
+            self.state = 470
             self.match(QuetzalParser.TK_GRAYSCALE)
-            self.state = 477
+            self.state = 471
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 478
+            self.state = 472
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 479
+            self.state = 473
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 480
+            self.state = 474
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -2875,24 +2857,24 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 482
+            self.state = 476
             self.match(QuetzalParser.TK_COLOR_REPLACE)
-            self.state = 483
+            self.state = 477
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 484
+            self.state = 478
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 485
+            self.state = 479
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 486
+            self.state = 480
             _la = self._input.LA(1)
             if not(_la==QuetzalParser.TYPE_ID or _la==QuetzalParser.TYPE_COLOR):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 487
+            self.state = 481
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 488
+            self.state = 482
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -2944,15 +2926,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 54, self.RULE_edgeDetection)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 490
+            self.state = 484
             self.match(QuetzalParser.TK_EDGE_DETECTION)
-            self.state = 491
+            self.state = 485
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 492
+            self.state = 486
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 493
+            self.state = 487
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 494
+            self.state = 488
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3032,19 +3014,19 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 496
+            self.state = 490
             self.match(QuetzalParser.TK_SCALE_IMAGE)
-            self.state = 497
+            self.state = 491
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 498
+            self.state = 492
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 499
+            self.state = 493
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 501
+            self.state = 495
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS:
-                self.state = 500
+                self.state = 494
                 _la = self._input.LA(1)
                 if not(_la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS):
                     self._errHandler.recoverInline(self)
@@ -3053,38 +3035,38 @@ class QuetzalParser ( Parser ):
                     self.consume()
 
 
+            self.state = 497
+            _la = self._input.LA(1)
+            if not(_la==QuetzalParser.TYPE_FLOAT or _la==QuetzalParser.TYPE_ID):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
+            self.state = 498
+            self.match(QuetzalParser.SYM_COMMA)
+            self.state = 500
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            if _la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS:
+                self.state = 499
+                _la = self._input.LA(1)
+                if not(_la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS):
+                    self._errHandler.recoverInline(self)
+                else:
+                    self._errHandler.reportMatch(self)
+                    self.consume()
+
+
+            self.state = 502
+            _la = self._input.LA(1)
+            if not(_la==QuetzalParser.TYPE_FLOAT or _la==QuetzalParser.TYPE_ID):
+                self._errHandler.recoverInline(self)
+            else:
+                self._errHandler.reportMatch(self)
+                self.consume()
             self.state = 503
-            _la = self._input.LA(1)
-            if not(_la==QuetzalParser.TYPE_FLOAT or _la==QuetzalParser.TYPE_ID):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 504
-            self.match(QuetzalParser.SYM_COMMA)
-            self.state = 506
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS:
-                self.state = 505
-                _la = self._input.LA(1)
-                if not(_la==QuetzalParser.SYM_PLUS or _la==QuetzalParser.SYM_MINUS):
-                    self._errHandler.recoverInline(self)
-                else:
-                    self._errHandler.reportMatch(self)
-                    self.consume()
-
-
-            self.state = 508
-            _la = self._input.LA(1)
-            if not(_la==QuetzalParser.TYPE_FLOAT or _la==QuetzalParser.TYPE_ID):
-                self._errHandler.recoverInline(self)
-            else:
-                self._errHandler.reportMatch(self)
-                self.consume()
-            self.state = 509
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 510
+            self.state = 504
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3146,24 +3128,24 @@ class QuetzalParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 512
+            self.state = 506
             self.match(QuetzalParser.TK_GET_COLOR_PALETTE)
-            self.state = 513
+            self.state = 507
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 514
+            self.state = 508
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 515
+            self.state = 509
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 516
+            self.state = 510
             _la = self._input.LA(1)
             if not(_la==QuetzalParser.TYPE_FLOAT or _la==QuetzalParser.TYPE_ID):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 517
+            self.state = 511
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 518
+            self.state = 512
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3221,19 +3203,19 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 60, self.RULE_colorMatchImage)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 520
+            self.state = 514
             self.match(QuetzalParser.TK_COLOR_MATCH_IMAGE)
-            self.state = 521
+            self.state = 515
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 522
+            self.state = 516
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 523
+            self.state = 517
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 524
+            self.state = 518
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 525
+            self.state = 519
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 526
+            self.state = 520
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3291,19 +3273,19 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 62, self.RULE_encodeSteganography)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 528
+            self.state = 522
             self.match(QuetzalParser.TK_ENCODE_STEGANOGRAPHY)
-            self.state = 529
+            self.state = 523
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 530
+            self.state = 524
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 531
+            self.state = 525
             self.match(QuetzalParser.SYM_COMMA)
-            self.state = 532
+            self.state = 526
             self.match(QuetzalParser.CTE_TAG)
-            self.state = 533
+            self.state = 527
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 534
+            self.state = 528
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3355,15 +3337,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 64, self.RULE_decodeSteganography)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 536
+            self.state = 530
             self.match(QuetzalParser.TK_DECODE_STEGANOGRAPHY)
-            self.state = 537
+            self.state = 531
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 538
+            self.state = 532
             self.match(QuetzalParser.TYPE_ID)
-            self.state = 539
+            self.state = 533
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 540
+            self.state = 534
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3415,15 +3397,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 66, self.RULE_getImageHeight)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 542
+            self.state = 536
             self.match(QuetzalParser.TK_GET_IMAGE_HEIGHT)
-            self.state = 543
+            self.state = 537
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 544
+            self.state = 538
             self.match(QuetzalParser.CTE_TAG)
-            self.state = 545
+            self.state = 539
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 546
+            self.state = 540
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3475,15 +3457,15 @@ class QuetzalParser ( Parser ):
         self.enterRule(localctx, 68, self.RULE_getImageWidth)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 548
+            self.state = 542
             self.match(QuetzalParser.TK_GET_IMAGE_WIDTH)
-            self.state = 549
+            self.state = 543
             self.match(QuetzalParser.SYM_PAREN_OPEN)
-            self.state = 550
+            self.state = 544
             self.match(QuetzalParser.CTE_TAG)
-            self.state = 551
+            self.state = 545
             self.match(QuetzalParser.SYM_PAREN_CLOSE)
-            self.state = 552
+            self.state = 546
             self.match(QuetzalParser.SYM_SEMI_COL)
         except RecognitionException as re:
             localctx.exception = re
@@ -3571,84 +3553,84 @@ class QuetzalParser ( Parser ):
         localctx = QuetzalParser.SpecfunctContext(self, self._ctx, self.state)
         self.enterRule(localctx, 70, self.RULE_specfunct)
         try:
-            self.state = 567
+            self.state = 561
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,41,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,40,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 554
+                self.state = 548
                 self.openimg()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 555
+                self.state = 549
                 self.saveimg()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 556
+                self.state = 550
                 self.grayscale()
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 557
+                self.state = 551
                 self.color_replace()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 558
+                self.state = 552
                 self.color_filter()
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 559
+                self.state = 553
                 self.edgeDetection()
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 560
+                self.state = 554
                 self.scaleImg()
                 pass
 
             elif la_ == 8:
                 self.enterOuterAlt(localctx, 8)
-                self.state = 561
+                self.state = 555
                 self.getColorPalette()
                 pass
 
             elif la_ == 9:
                 self.enterOuterAlt(localctx, 9)
-                self.state = 562
+                self.state = 556
                 self.colorMatchImage()
                 pass
 
             elif la_ == 10:
                 self.enterOuterAlt(localctx, 10)
-                self.state = 563
+                self.state = 557
                 self.encodeSteganography()
                 pass
 
             elif la_ == 11:
                 self.enterOuterAlt(localctx, 11)
-                self.state = 564
+                self.state = 558
                 self.decodeSteganography()
                 pass
 
             elif la_ == 12:
                 self.enterOuterAlt(localctx, 12)
-                self.state = 565
+                self.state = 559
                 self.getImageHeight()
                 pass
 
             elif la_ == 13:
                 self.enterOuterAlt(localctx, 13)
-                self.state = 566
+                self.state = 560
                 self.getImageWidth()
                 pass
 

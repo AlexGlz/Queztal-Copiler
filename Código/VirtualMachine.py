@@ -3,7 +3,6 @@ from MemoryManager import *
 
 class VirtualMemory:
     def __init__(self,globals,constants):
-
         self.vMemory = {
             "Global": {
                 "int":[],
@@ -60,10 +59,10 @@ class VirtualMemory:
         location = self.getLocation(address)
         scope = location[0]
         type = location[1]
-        if(scope == "Global" or scope == "Constant"):
+        if(scope == "Global" or scope == "Constant"): ##SI LA DIRECCION ES PARTE DEL BLOQUE DE VARIABLES GLOBALES O CONSTANTES
             self.vMemory[scope][type][index] = value
         else:
-            self.vMemory["Stack"][-1][scope][type][index] = value #El -1 permite acceder al último elemento del stack
+            self.vMemory["Stack"][-1][scope][type][index] = value #El -1 permite acceder al último elemento del stack de llamadas
 
     
     def initializeMemBlock(self,size):
@@ -92,7 +91,15 @@ class VirtualMachine():
         ##Manejo de cuádruplos
         self.Quads = quads           
         self.QuadCounter = 0
+        ##Tablas de funciones
+        self.Tables = tables["functions"]
+        self.CallStack = []
+        self.PreparingMemory = dict()
+        self.ParamData = dict()
+        ##
+        self.CounterStack = []
 
+        ##VARIABLES Y TEMPORALES DE LA FUNCIÓN MAIN
         mainVars = tables["functions"]["main"]["vars"]
         mainTemps =tables["functions"]["main"]["temps"]
         self.virtualMemory.ERA({"Local":mainVars,"Temp":mainTemps})
@@ -122,11 +129,43 @@ class VirtualMachine():
                 if(izq is not None):
                     izqVal = self.virtualMemory.getValue(izq)
                 else:
-                    izqVal = None
-                
+                    izqVal = None               
                 self.goTo(izqVal,operador,resultado)
             elif(operador=="print"):
                 print(self.virtualMemory.getValue(resultado))
+            elif(operador=="ERA"):
+                fVarCounts = self.Tables[izq]["vars"]
+                fTempCounts = self.Tables[izq]["temps"]
+                self.virtualMemory.ERA({"Local":fVarCounts,"Temp":fTempCounts})
+                self.PreparingMemory = self.virtualMemory.vMemory["Stack"].pop()
+                self.CallStack.append(izq)
+            elif(operador=="param"):
+                actualFunct = self.CallStack[-1]
+                paramNumber = int(resultado[5:])-1 #Obtener el número de parametro
+                paramName = self.Tables[actualFunct]["parameters"][paramNumber]
+                paramAdd = self.Tables[actualFunct]["locals"][paramName]["dir"]
+                paramValue = self.virtualMemory.getValue(izq)
+                self.ParamData[paramAdd] = paramValue
+            elif(operador=="gosub"):
+                #Agregar la memoria de la fución al stack de memoria de funciones
+                self.virtualMemory.vMemory["Stack"].append(self.PreparingMemory)
+                #Vaciar el contenido de los parámetros en la memoria de la nueva funcion
+                for (paramAdd,paramVal) in self.ParamData.items():
+                    self.virtualMemory.setValue(paramVal,paramAdd)
+                #Mover el apuntador de los cuádruplos al correspondiente a la función
+                self.CounterStack.append(self.QuadCounter)
+                self.QuadCounter = self.Tables[self.CallStack[-1]]["position"] - 2
+            elif(operador=="ENDPROC"):
+                #Reestablecer el contador de cúadruplos
+                self.QuadCounter = self.CounterStack.pop()
+                self.virtualMemory.vMemory["Stack"].pop()
+            elif(operador=="RETURN"):
+                actualFunct = self.CallStack[-1]
+                functionVarAdd = self.Tables[actualFunct]["varPosition"]
+                if(self.Tables[actualFunct]["type"]!="void"):
+                    self.virtualMemory.setValue(self.virtualMemory.getValue(resultado),functionVarAdd)
+                self.QuadCounter = self.CounterStack.pop() ##Regresar al apuntador de quad anterior
+                self.virtualMemory.vMemory["Stack"].pop()
             self.QuadCounter += 1
 
     def aritmethicExp(self,valorIzq,valorDer,operador):
