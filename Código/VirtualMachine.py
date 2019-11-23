@@ -30,7 +30,11 @@ class VirtualMemory:
         return Memory.Reference[defaultAdd]
 
     def getValue(self,address):
-        index = address%Memory.MemSize
+        #En caso de que se acceda a un apuntador ejemplo: (5000)
+        if(str(address)[0]=="("):
+            address = address[1:-1]#remover los paréntesis
+            address = self.getValue(int(address)) #La dirección ahora será el valor del apuntador
+        index = int(address)%Memory.MemSize
         location = self.getLocation(address)
         scope = location[0]
         type = location[1]
@@ -55,6 +59,12 @@ class VirtualMemory:
             return valor
 
     def setValue(self,value,address):
+        #En caso de que se acceda a un apuntador ejemplo: (5000)
+        if(str(address)[0]=="("):
+            address = address[1:-1]#remover los paréntesis
+            address = self.getValue(int(address)) #La dirección ahora será el valor del apuntador
+        else:
+            address = int(address)
         index = address%Memory.MemSize
         location = self.getLocation(address)
         scope = location[0]
@@ -66,6 +76,8 @@ class VirtualMemory:
 
     
     def initializeMemBlock(self,size):
+        if(size>Memory.MemSize):
+            raise Exception("Stack Overflow")
         return [None]*size
 
 
@@ -94,8 +106,8 @@ class VirtualMachine():
         ##Tablas de funciones
         self.Tables = tables["functions"]
         self.CallStack = []
-        self.PreparingMemory = dict()
-        self.ParamData = dict()
+        self.PreparingMemory = []
+        self.ParamData = []
         ##
         self.CounterStack = []
 
@@ -106,6 +118,7 @@ class VirtualMachine():
 
         
     def run(self):
+        
         while self.QuadCounter < len(self.Quads):
             quad = self.Quads[self.QuadCounter]
             operador = quad.Operador
@@ -137,28 +150,40 @@ class VirtualMachine():
                 fVarCounts = self.Tables[izq]["vars"]
                 fTempCounts = self.Tables[izq]["temps"]
                 self.virtualMemory.ERA({"Local":fVarCounts,"Temp":fTempCounts})
-                self.PreparingMemory = self.virtualMemory.vMemory["Stack"].pop()
+                self.PreparingMemory.append(self.virtualMemory.vMemory["Stack"].pop())
                 self.CallStack.append(izq)
+                #Generar auxiliar de parámetros
+                self.ParamData.append(dict())
+
             elif(operador=="param"):
                 actualFunct = self.CallStack[-1]
                 paramNumber = int(resultado[5:])-1 #Obtener el número de parametro
                 paramName = self.Tables[actualFunct]["parameters"][paramNumber]
-                paramAdd = self.Tables[actualFunct]["locals"][paramName]["dir"]
+                paramAdd = self.Tables[actualFunct]["parameters"][paramNumber][2]
                 paramValue = self.virtualMemory.getValue(izq)
-                self.ParamData[paramAdd] = paramValue
+                self.ParamData[-1][paramAdd] = paramValue
             elif(operador=="gosub"):
                 #Agregar la memoria de la fución al stack de memoria de funciones
-                self.virtualMemory.vMemory["Stack"].append(self.PreparingMemory)
+                self.virtualMemory.vMemory["Stack"].append(self.PreparingMemory.pop())
                 #Vaciar el contenido de los parámetros en la memoria de la nueva funcion
-                for (paramAdd,paramVal) in self.ParamData.items():
+                for (paramAdd,paramVal) in self.ParamData[-1].items():
                     self.virtualMemory.setValue(paramVal,paramAdd)
                 #Mover el apuntador de los cuádruplos al correspondiente a la función
                 self.CounterStack.append(self.QuadCounter)
                 self.QuadCounter = self.Tables[self.CallStack[-1]]["position"] - 2
             elif(operador=="ENDPROC"):
-                #Reestablecer el contador de cúadruplos
+                #Reestablecer el contador de cúadruplos y hacer pop en los stacks
                 self.QuadCounter = self.CounterStack.pop()
-                self.virtualMemory.vMemory["Stack"].pop()
+                self.virtualMemory.vMemory["Stack"].pop() #Borrar la memoria de la función
+                self.CallStack.pop() #Eliminar la función de la pila de llamadas
+                self.ParamData.pop()
+            elif(operador=="VER"): #Verifica si el operando no se sale del límite superior 
+                index = self.virtualMemory.getValue(izq)
+                limInf= int(der)
+                limSup = int(resultado)
+                if(index > limSup or index < limInf):
+                    raise Exception("index out of range") #display exception                
+                
             elif(operador=="RETURN"):
                 actualFunct = self.CallStack[-1]
                 functionVarAdd = self.Tables[actualFunct]["varPosition"]
@@ -166,6 +191,10 @@ class VirtualMachine():
                     self.virtualMemory.setValue(self.virtualMemory.getValue(resultado),functionVarAdd)
                 self.QuadCounter = self.CounterStack.pop() ##Regresar al apuntador de quad anterior
                 self.virtualMemory.vMemory["Stack"].pop()
+                self.CallStack.pop() #Eliminar la función de la pila de llamadas
+                self.ParamData.pop()
+                
+            #Avanzar el cúadruplo
             self.QuadCounter += 1
 
     def aritmethicExp(self,valorIzq,valorDer,operador):

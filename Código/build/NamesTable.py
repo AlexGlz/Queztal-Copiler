@@ -23,7 +23,6 @@ class NamesTable():
             self.functionsT[newFunct]["type"] = type #add function to functionsT
             self.functionsT[newFunct]["position"] = position
             self.functionsT[newFunct]["parameters"] = []
-            self.functionsT[newFunct]["locals"] = dict()
             self.actualFuncName = newFunct
             if(type != "void"): ##AGREGAR LA VARIABLE GLOBAL DE LA FUNCION CUANDO TIENE RETURN
                 memLocation = Memory.assignMemory("Global",type,1)
@@ -46,7 +45,6 @@ class NamesTable():
             self.dimensions[i]["m"] = self.actualR/(self.dimensions[i]["ls"]+1)
             self.actualR= self.dimensions[i]["m"]
         
-
         
 
     def addLocalVar(self,newVar,type): #function to register a new Local Variable
@@ -56,14 +54,17 @@ class NamesTable():
         else:
             virtualAdd = Memory.assignMemory("Local",type,self.varSize)
             self.dimentionDef()
-            self.functionsT[self.actualFuncName]["locals"][newVar] = {"type":type,"dir":virtualAdd,"dim":self.dimensions}
+            
+            
+            self.actualT[newVar] = type #add variable to actual local variables table (actualT)
+            self.actualT[newVar] = {"type":type,"dir":virtualAdd,"dim":self.dimensions}
+
             #Reiniciar auxiliares
             self.dimensions = []
             self.actualR = 1
             self.varSize = 1
 
-            self.actualT[newVar] = type #add function to local actualT
-            return True
+            return virtualAdd
 
     def addGlobalVar(self,newVar,type):
 #function to register a ne
@@ -86,13 +87,14 @@ class NamesTable():
         if self.actualT == None:
             self.addGlobalVar(newVar,type)
         else:
-            self.addLocalVar(newVar,type)
             self.varCnt +=1
+            return self.addLocalVar(newVar,type)
+            
     
     def addParameter(self,newVar,type):
-        self.addVar(newVar,type)
+        address = self.addVar(newVar,type)
         self.parameterC += 1
-        self.functionsT[self.actualFuncName]["parameters"].append(newVar)
+        self.functionsT[self.actualFuncName]["parameters"].append((newVar,type,address))
 
     def exitParams(self):
         self.functionsT[self.actualFuncName]["parNum"] = self.parameterC
@@ -100,6 +102,7 @@ class NamesTable():
 
     #Inicializa la tabla de variables locales
     def initLocalT(self):
+        print(self.actualT)
         self.actualT = dict()
         self.parameterC = 0
 

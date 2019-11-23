@@ -26,7 +26,7 @@ class Stack:
         self.Types = []#Stack de tipos
         self.tempCounter = 1 #Contador de varibles temporales creadas
         self.QuadCounter = 1 #Contará los Cuadruplos
-        self.ParamCounter = dict()
+        self.ParamCounter = []
         self.Dims=[] #Stack de dimensiones
     
     ############FUNCIONES AUXILIARES#####################
@@ -43,8 +43,8 @@ class Stack:
             self.Types.append(namesTable.globalsT[name]["type"]) #Add type to Type Vector            
         elif name in namesTable.actualT:#Or in local
             #self.Opd.append(name) #Add name to Operand Vector
-            self.Opd.append(namesTable.functionsT[namesTable.actualFuncName]["locals"][name]["dir"]) #Add memory address to Operand Vector
-            self.Types.append(namesTable.actualT[name]) #Add type to Type Vector               
+            self.Opd.append(namesTable.actualT[name]["dir"]) #Add memory address to Operand Vector
+            self.Types.append(namesTable.actualT[name]["type"]) #Add type to Type Vector               
         else:
             raise Exception("Operand '" + name + "' not defined") #display exception
     
@@ -153,7 +153,7 @@ class Stack:
     def generateERA(self, fName):
         self.Quads.append(Quad("ERA",fName,None,None))
         self.QuadCounter+=1
-        self.ParamCounter[fName] = 0
+        self.ParamCounter.append({fName:0})
 
     #format 2 param paramName _ param1
     def generateParam(self,paramCount):
@@ -173,23 +173,23 @@ class Stack:
     #####################FIN GENERADORES DE CUÁDRUPLOS#################################
 
     def getParam(self, fName):
-        parameterCounter = self.ParamCounter[fName]
-        parameterNumber = namesTable.functionsT[fName]['parNum']
+        parameterCounter = self.ParamCounter[-1][fName] #Contador actual de los parámetros dados
+        parameterNumber = namesTable.functionsT[fName]['parNum'] #Número de parámetos que recibe la función
         #If number of given parameters exceed's functions number of expected parameters
         if (parameterCounter > parameterNumber-1):
             raise Exception(f"In function [{fName}]: expected [{parameterNumber}] parameters but more were given")  
         paramName = namesTable.functionsT[fName]["parameters"][parameterCounter]
-        paramExpectedType = namesTable.functionsT[fName]["locals"][paramName]["type"]
+        paramExpectedType = namesTable.functionsT[fName]["parameters"][parameterCounter][1]
         paramActualType = self.Types.pop() 
         #Type doesn't match expected parameter type
         if(paramExpectedType != paramActualType):
             raise Exception(f"In function [{fName}], parameter #{parameterCounter}: Expected type [{paramExpectedType}], but [{paramActualType}] were given")
         ##AQUI
         self.generateParam(parameterCounter+1)
-        self.ParamCounter[fName]+=1
+        self.ParamCounter[-1][fName]+=1
     
     def exitParams(self,fName):
-        parameterCounter = self.ParamCounter[fName] 
+        parameterCounter = self.ParamCounter[-1][fName] 
         parameterNumber = namesTable.functionsT[fName]['parNum']
         if (parameterCounter < parameterNumber):
             raise Exception(f"In function [{fName}]: expected [{parameterNumber}] parameters but [{parameterCounter}] were given")
@@ -274,6 +274,7 @@ class Stack:
         Memory.resetMemory("Local")
         Memory.resetMemory("Temp")
         ##ENDPROC SE GENERA EN FUNCIONES QUE NO SON main
+        
         if(namesTable.actualFuncName != "main"):
             self.generateEndProc()
 
@@ -300,6 +301,7 @@ class Stack:
 
     def exitCallFunc(self,funcName):
         self.generateGoSub(funcName)
+        self.ParamCounter.pop()
         if(namesTable.functionsT[funcName]["type"] != "void"): #Si la funcion no es void generar su cúadruplo para el return
             functVarAdd = namesTable.globalsT[funcName]["dir"]
             functVarType = namesTable.globalsT[funcName]["type"]
@@ -320,55 +322,82 @@ class Stack:
     def dimEnter(self,varName):
         #Agrega la dimensión a la pila de dimesiones
         if(len(self.Dims)>0):
-            front = self.Dims[-1]
-            if(front[0] == varName):
+            front = self.Dims[-1] #Front guarda la dimensión agregada más recientemente ##PENDIENTE: CHECAR SI SE REPITE EL NOMBRE ARREGLO DENTRO DE SÍ MISMO X[X[]][]
+            if(front[0] == varName): #x[1][2]
                 self.Dims.append([varName,front[1]+1])
-            else:
+            else: #Ej que cumple la condición x[1][a[1]]
                 self.Dims.append([varName,1])
         else:
-            self.Dims.append([varName,1])
+            self.Dims.append([varName,1]) #Agrega el nombre de la dimension y 1 (X[5] = append("X",1))
         
         ##Obtener el nombre de la variable y el número de la dimensión actual de la pila de Dimensiones
         frontName = self.Dims[-1][0]
-        frontDim = self.Dims[-1][1]
+        frontDim = self.Dims[-1][1] #Número de la dimensión actual
 
-        listaDim = namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dim"]
-        aux=self.Opd.pop()
+        listaDim = namesTable.actualT[frontName]["dim"]
+
+        if(frontDim > len(listaDim)): #Checa que el número de dimensiones no exceda al número de dimensiones dadas en la definición de la variable
+            raise Exception("Variable '" + frontName + "' with "+ frontDim + " Dimensions not defined, " + len(listaDim) + " where expected") #display exception
+
+        print(listaDim)
+        
+        aux = self.Opd[-1]        
 
         #print("VER", aux, 0 , listaDim[frontDim-1]["ls"])
         self.generateVer(aux,0,listaDim[frontDim-1]["ls"])
         if(frontDim<len(listaDim)):        
+            aux=self.Opd.pop() #Obtiene el index dentro de casilla
             T = Memory.assignMemory("Temp","int",1)
             self.tempCounter+=1
             #print("*",aux,listaDim[frontDim-1]["m"],T)
-            self.Quads.append(Quad("*",aux,listaDim[frontDim-1]["m"],T))
+            #obtener valor constante de M
+            #M = generateConstant(...)
+
+            ##Generar u obtener dirección de la constante de la M de la dimensión
+            mValue = int(listaDim[frontDim-1]["m"])
+            self.Types.append("int")
+            self.addConstant(str(mValue))
+            mAdd = self.Opd.pop()
+            
+            self.Quads.append(Quad("*",aux,mAdd,T))
             self.QuadCounter+=1
 
             self.Opd.append(T);
             self.Types.append("int")
 
         if(frontDim>1):
-            aux2 = self.Opd.pop()
-            aux1 = self.Opd.pop()
+            aux2 = self.Opd.pop() #SN*MN
+            aux1 = self.Opd.pop() #SN+1*MN+1
+            
             T = Memory.assignMemory("Temp","int",1)
+            self.Opd.append(T)
             #print("+",aux1,aux2,T)
             self.Quads.append(Quad("+",aux1,aux2,T))
             self.QuadCounter+=1
-            self.Opd.append(T)
-        
+
         if(frontDim==len(listaDim)):
-            aux1 = self.Opd.pop()
+            aux = self.Opd.pop()
             T = Memory.assignMemory("Temp","int",1)
+            
+    
 
             ##POR EL MOMENTO LA DIRECCION SE AGREGA DIRECTAMENTE AL CUADRUPLO, HAY QUE GUARDARLA EN UNA CTE Y PASARLE LA DIRECCION
-            #print("+",aux1,namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dir"],T)
-            self.Quads.append(Quad("+",aux,namesTable.functionsT[namesTable.actualFuncName]["locals"][frontName]["dir"],"(" +str(T)+")"))
+            #print("+",aux1,namesTable.actualT[frontName]["dir"],T)
+            ##Generar u obtener dirección de la constante de la dirección inicial del arreglo
+            addressValue = namesTable.actualT[frontName]["dir"]
+            self.Types.append("int")
+            self.addConstant(str(addressValue))
+            addressLocation = self.Opd.pop()
+
+
+            self.Quads.append(Quad("+",aux,addressLocation,T))
             self.QuadCounter+=1
             self.Opd.append("(" +str(T)+")")
         #print("VER",self.Opd.pop(),"1",limSup)
 
     def printQuads(self):
         counter = 1
+        
         for quad in self.Quads:
             print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
             counter+=1
@@ -376,14 +405,9 @@ class Stack:
         virtualMachine = VirtualMachine(self.Quads,tables)
         #print(self.Dims)
         #print(namesTable.globalsT)
-        #print(namesTable.constantsT)
-        print(namesTable.functionsT)
-
-        #virtualMachine.run()
-        
-        
-        
-
-        
+        print(namesTable.constantsT)
+        virtualMachine.run()
+        print(virtualMachine.virtualMemory.vMemory)
+                
 stack = Stack()
 
