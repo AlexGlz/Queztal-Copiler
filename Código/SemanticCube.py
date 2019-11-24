@@ -63,6 +63,21 @@ class SemanticCube():
                     "&&":None,
                     "||":None,
                     "=":None              
+                },
+            "tag": ##INT-TAG
+                {   "+":None,
+                    "-":None,
+                    "*":None,
+                    "/":None,
+                    ">":None,
+                    "<":None,
+                    ">=":None,
+                    "<=":None,
+                    "==":None,
+                    "!=":None,
+                    "&&":None,
+                    "||":None,
+                    "=":None              
                 }
             }
         })
@@ -131,7 +146,22 @@ class SemanticCube():
                         "&&":None,
                         "||":None,
                         "=":None             
-                    }          
+                    },
+            "tag": ##
+                {   "+":None,
+                    "-":None,
+                    "*":None,
+                    "/":None,
+                    ">":None,
+                    "<":None,
+                    ">=":None,
+                    "<=":None,
+                    "==":None,
+                    "!=":None,
+                    "&&":None,
+                    "||":None,
+                    "=":None              
+                }          
             }
         })
         #######BOOL
@@ -197,7 +227,22 @@ class SemanticCube():
                         "&&":None,
                         "||":None,
                         "=":None                         
-                    }
+                    },
+            "tag": 
+                {   "+":None,
+                    "-":None,
+                    "*":None,
+                    "/":None,
+                    ">":None,
+                    "<":None,
+                    ">=":None,
+                    "<=":None,
+                    "==":None,
+                    "!=":None,
+                    "&&":None,
+                    "||":None,
+                    "=":None              
+                }
                 
             }
         })
@@ -263,7 +308,22 @@ class SemanticCube():
                         "&&":None,
                         "||":None,
                         "=":"color"            
-                    }
+                    },
+            "tag": 
+                {   "+":None,
+                    "-":None,
+                    "*":None,
+                    "/":None,
+                    ">":None,
+                    "<":None,
+                    ">=":None,
+                    "<=":None,
+                    "==":None,
+                    "!=":None,
+                    "&&":None,
+                    "||":None,
+                    "=":None              
+                }
                 }
             })
 

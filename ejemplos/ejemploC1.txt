@@ -1,27 +1,17 @@
-
 func int suma(int x, int y){
-    return x + y ;
+    return x+y;
 }
 
-func int factorial(int x){
-    if(x<1){
-        return 1;
-    }else{
-        return x * factorial(x-1);
-    }
+func void test(){
+    print("HOLA");
+    return;
 }
 
 func main(){  
-    define int x[10][10];
-    define int i, j;
-    i=0;
-    j=0;
-    while(i<10){
-        j=0;
-        while(j<10){
-            x[i][j] = j + i*10;
-            j=j+1;
-        }
-        i=i+1;
-    }
+    define int x[10];
+    define color c[256][228];
+    define int i;
+    
+    openImg("media/image1.png",c);
+    
 }

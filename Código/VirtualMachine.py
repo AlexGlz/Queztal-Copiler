@@ -1,5 +1,5 @@
 from MemoryManager import *
-
+from SpecialFunctions import *
 
 class VirtualMemory:
     def __init__(self,globals,constants):
@@ -8,13 +8,15 @@ class VirtualMemory:
                 "int":[],
                 "float":[],
                 "bool":[],
-                "color":[]
+                "color":[],
+                "tag":[]
                 },
             "Constant":{
                 "int":[],
                 "float":[],
                 "bool":[],
-                "color":[]
+                "color":[],
+                "tag":[]
             },
             "Stack":[]    
         }
@@ -55,6 +57,8 @@ class VirtualMemory:
                 return None
         elif(type == "memory"):
             return self.getValue(valor)
+        elif(type == 'tag'): #Si es tag, extra el caracter de comillas " que se encuentran en la primer y última posición
+            return valor[1:-1]
         else:
             return valor
 
@@ -128,9 +132,10 @@ class VirtualMachine():
             if(operador == "="):
                 self.virtualMemory.setValue(self.virtualMemory.getValue(izq),resultado)
             elif(operador in self.aritmethicOP): 
+                tipo = self.virtualMemory.getLocation(izq)[1]
                 izqVal = self.virtualMemory.getValue(izq)
                 derVal = self.virtualMemory.getValue(der)
-                valor = self.aritmethicExp(izqVal,derVal,operador)
+                valor = self.aritmethicExp(izqVal,derVal,operador,tipo)
                 self.virtualMemory.setValue(valor,resultado)
             elif(operador in self.logicOp):
                 izqVal = self.virtualMemory.getValue(izq)
@@ -146,6 +151,37 @@ class VirtualMachine():
                 self.goTo(izqVal,operador,resultado)
             elif(operador=="print"):
                 print(self.virtualMemory.getValue(resultado))
+            elif(operador=="read"):
+                readValue = input()
+                type = self.virtualMemory.getLocation(resultado)[1]
+                if(type == "int"):
+                    try:
+                        int(readValue)
+                        self.virtualMemory.setValue(int(readValue),resultado)
+                    except Exception:
+                        raise Exception("Input Value invalid, expected int")
+                elif(type == "float"):
+                    try:
+                        float(readValue)
+                        self.virtualMemory.setValue(float(readValue),resultado)
+                    except Exception:
+                        raise Exception("Input Value invalid, expected float")
+                elif(type == "color"):
+                    if (len(readValue) == 7 and readValue[0] == "#"):
+                        for char in readValue[1:]:
+                            if( not (char.lower() == 'a' or char.lower() == 'b' or char.lower() == 'c' or char.lower() == 'd' or char.lower() == 'e' or char.lower() == 'f' or char == '0' or char == '1' or char == '2' or char == '3' or char == '4' or char == '5' or char == '6' or char == '7' or char == '8' or char == '9')):
+                                raise Exception("Input Value invalid, expected color (#ffffff)")
+                        self.virtualMemory.setValue(readValue.lower(),resultado)
+                    else:
+                        raise Exception("Input Value invalid, expected color (#ffffff)")  
+                elif(type == "bool"):
+                    if(readValue.lower() == "true"):
+                        self.virtualMemory.setValue(True,resultado)
+                    elif(readValue.lower() == "false"):
+                        self.virtualMemory.setValue(False,resultado)
+                    else:
+                        raise Exception("Input Value invalid, expected bool")
+
             elif(operador=="ERA"):
                 fVarCounts = self.Tables[izq]["vars"]
                 fTempCounts = self.Tables[izq]["temps"]
@@ -153,7 +189,7 @@ class VirtualMachine():
                 self.PreparingMemory.append(self.virtualMemory.vMemory["Stack"].pop())
                 self.CallStack.append(izq)
                 #Generar auxiliar de parámetros
-                self.ParamData.append(dict())
+                self.ParamData.append(dict())          
 
             elif(operador=="param"):
                 actualFunct = self.CallStack[-1]
@@ -186,26 +222,96 @@ class VirtualMachine():
                 
             elif(operador=="RETURN"):
                 actualFunct = self.CallStack[-1]
-                functionVarAdd = self.Tables[actualFunct]["varPosition"]
-                if(self.Tables[actualFunct]["type"]!="void"):
-                    self.virtualMemory.setValue(self.virtualMemory.getValue(resultado),functionVarAdd)
+                if(self.Tables[actualFunct]["type"] != "void"):
+                    functionVarAdd = self.Tables[actualFunct]["varPosition"]
+                    if(self.Tables[actualFunct]["type"]!="void"):
+                       self.virtualMemory.setValue(self.virtualMemory.getValue(resultado),functionVarAdd)
                 self.QuadCounter = self.CounterStack.pop() ##Regresar al apuntador de quad anterior
                 self.virtualMemory.vMemory["Stack"].pop()
                 self.CallStack.pop() #Eliminar la función de la pila de llamadas
-                self.ParamData.pop()
+                self.ParamData.pop()      
+
+            ##########FUNCIONES ESPECIALES
+            elif(operador=="openimg"):
+                nextQuad = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+=1
+                imagePath = self.virtualMemory.getValue(izq)
+                arrayAdd = resultado
+                arrayX = int(nextQuad.OperandoI)
+                arrayY = int(nextQuad.OperandoD)
+                openImg(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
                 
             #Avanzar el cúadruplo
             self.QuadCounter += 1
+    
+    #Función que recibe dos valores hexadecimales en string (#ff0000) y una operación (+,-)
+    #y regresa el resultado de la operación en hexadecimal
+    def operacionesHexadecimales(self,hexNumUno, hexNumDos, operador):
+        #hex color format: #ff0000 => where #ff(red)00(green),00(blue) = >(255,0,0)
+        rValue1 = int(hexNumUno[1:3],16) # Primer par de digitos del codigo hexadecimal correpondientes a "Red" los convierte a entero
+        rValue2 = int(hexNumDos[1:3],16)
+        gValue1 = int(hexNumUno[3:5],16) # Segundo par de digitos del codigo hexadecimal correpondientes a "Green" los convierte a entero
+        gValue2 = int(hexNumDos[3:5],16)
+        bValue1 = int(hexNumUno[5:7],16) # Tercer par de digitos del codigo hexadecimal correpondientes a "Blue" los convierte a entero
+        bValue2 = int(hexNumDos[5:7],16)
 
-    def aritmethicExp(self,valorIzq,valorDer,operador):
+        #Se realiza la operación correspondiente para los valores red, green y blue
         if(operador == "+"):
-            return valorIzq + valorDer
-        elif (operador == "-"):
-            return valorIzq - valorDer
-        elif (operador == "*"):
-            return valorIzq * valorDer
-        elif (operador == "/"):
-            return valorIzq / valorDer
+            nuevoRValueInt = rValue1 + rValue2
+            nuevoGValueInt = gValue1 + gValue2
+            nuevoBValueInt = bValue1 + bValue2
+        elif(operador == "-"):
+            nuevoRValueInt = rValue1 - rValue2
+            nuevoGValueInt = gValue1 - gValue2
+            nuevoBValueInt = bValue1 - bValue2
+
+        #Se verifica que ninguno de los resultados excedan los limites 255 ni 0, si sí, se truncan 
+        if(nuevoRValueInt > 255):
+            nuevoRValueInt = 255
+        elif(nuevoRValueInt < 0):
+            nuevoRValueInt = 0
+
+        if(nuevoGValueInt > 255):
+            nuevoGValueInt = 255
+        elif(nuevoGValueInt < 0):
+            nuevoGValueInt = 0
+
+        if(nuevoBValueInt > 255):
+            nuevoBValueInt = 255
+        elif(nuevoBValueInt < 0):
+            nuevoBValueInt = 0
+        
+        hexRvalue = str(hex(nuevoRValueInt)) #Convierte el valor int a Hexadecimal y posteriormente a string, queda con formato "0xff"
+        hexRvalue = hexRvalue[2:] #Se omiten los primeros dos caracteres del string "0xff" => ff
+        if(len(hexRvalue) == 1 ): #En caso de que el valor hexadecimal tena un solo caracter (Ej. '7') 
+            hexRvalue = "0" + hexRvalue #Se agrega un 0 al principio => '07'
+        
+        hexGvalue = str(hex(nuevoGValueInt)) 
+        hexGvalue = hexGvalue[2:] 
+        if(len(hexGvalue) == 1 ):
+            hexGvalue = "0" + hexGvalue 
+        
+        hexBvalue = str(hex(nuevoBValueInt)) 
+        hexBvalue = hexBvalue[2:] 
+        if(len(hexBvalue) == 1 ):
+            hexBvalue = "0" + hexBvalue 
+        
+        #Se retorna un string con formato hexadecimal #ffffff
+        return "#" + hexRvalue + hexGvalue + hexBvalue
+
+    #tipo: [int, float, color]
+    def aritmethicExp(self,valorIzq,valorDer,operador,tipo):
+        if(tipo == "color"):
+                return self.operacionesHexadecimales(valorIzq,valorDer,operador)
+        elif(tipo != "color"):        
+            if(operador == "+"):
+                return valorIzq + valorDer
+            elif (operador == "-"):
+                return valorIzq - valorDer
+            elif (operador == "*"):
+                return valorIzq * valorDer
+            elif (operador == "/"):
+                return valorIzq / valorDer
 
     def logicExp(self,valorIzq,valorDer,operador):
         if(operador == ">"):

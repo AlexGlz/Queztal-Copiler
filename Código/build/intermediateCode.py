@@ -37,6 +37,8 @@ class Stack:
     def removeP(self): #removes parenthesis
         self.O.pop()
     def addOperand(self,name): #adds opperand
+        if name in namesTable.functionsT:
+            raise Exception(f"Cannot use [{name}] function as a varable.")
         if name in namesTable.globalsT: #Operando must already be defined in global
             #self.Opd.append(name) #Add name to Operand Vector
             self.Opd.append(namesTable.globalsT[name]["dir"]) #Add memory address to Operand Vector
@@ -273,6 +275,7 @@ class Stack:
         namesTable.varCnt = 0
         Memory.resetMemory("Local")
         Memory.resetMemory("Temp")
+        print(namesTable.actualT)
         ##ENDPROC SE GENERA EN FUNCIONES QUE NO SON main
         
         if(namesTable.actualFuncName != "main"):
@@ -317,7 +320,27 @@ class Stack:
             self.generateUnaryQuad()
             self.Opd.append(tempDir)
             self.Types.append(functVarType)
-        
+
+    ##Inicializar el acceso a una variable dimensionada
+    def initDimVar(self,varName):
+        listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
+        if(len(listaDim)==0): #Verificar que la variable sea dimensionada
+            raise Exception(f"Variable [{varName}] is not an array")
+        else:
+            self.Dims.append(["(",0]) #Agregar nuevo tope a la pila de dimensiones
+            self.Opd.pop() #Eliminar de la pila de operandos la dirección inicial del arreglo ya que luego se sustituirá por la dirección accedidad del arreglo
+
+    ##Saliendo de la variable dimensionada
+    def exitDimVar(self,varName):
+        dimCount = len(namesTable.actualT[varName]["dim"]) #lista de dimensiones de la variable
+        #Verificar que las dimensiones accedidas no sean menores a las definidas en la variable
+        if(self.Dims[-1][1] != dimCount):
+            raise Exception(f"Variable [{varName}]: [{self.Dims[-1][1] }] dimentions accessed but [{dimCount}] were expected.")
+        #Remover las dimensiones ya revisadas del stack de dimensiones
+        while(self.Dims[-1][0] != "("):
+            self.Dims.pop()
+        self.Dims.pop() #Eliminar el tope
+
     ##Al detectar el acceso a un índice
     def dimEnter(self,varName):
         #Agrega la dimensión a la pila de dimesiones
@@ -329,6 +352,7 @@ class Stack:
                 self.Dims.append([varName,1])
         else:
             self.Dims.append([varName,1]) #Agrega el nombre de la dimension y 1 (X[5] = append("X",1))
+            
         
         ##Obtener el nombre de la variable y el número de la dimensión actual de la pila de Dimensiones
         frontName = self.Dims[-1][0]
@@ -337,7 +361,7 @@ class Stack:
         listaDim = namesTable.actualT[frontName]["dim"]
 
         if(frontDim > len(listaDim)): #Checa que el número de dimensiones no exceda al número de dimensiones dadas en la definición de la variable
-            raise Exception("Variable '" + frontName + "' with "+ frontDim + " Dimensions not defined, " + len(listaDim) + " where expected") #display exception
+            raise Exception("Variable '" + frontName + "' with "+ str(frontDim) + " Dimensions not defined, " + str(len(listaDim)) + " where expected") #display exception
 
         print(listaDim)
         
@@ -379,7 +403,6 @@ class Stack:
             aux = self.Opd.pop()
             T = Memory.assignMemory("Temp","int",1)
             
-    
 
             ##POR EL MOMENTO LA DIRECCION SE AGREGA DIRECTAMENTE AL CUADRUPLO, HAY QUE GUARDARLA EN UNA CTE Y PASARLE LA DIRECCION
             #print("+",aux1,namesTable.actualT[frontName]["dir"],T)
@@ -395,6 +418,32 @@ class Stack:
             self.Opd.append("(" +str(T)+")")
         #print("VER",self.Opd.pop(),"1",limSup)
 
+    ##Código para funciones auxiliares
+    def openimg(self,varName):
+        print(namesTable.actualT)
+        if(True): 
+            tagType = self.Types.pop()
+            tagAdd = self.Opd.pop()
+            vartype = namesTable.actualT[varName]["type"];
+            varDims = namesTable.actualT[varName]["dim"];
+            varAdd = namesTable.actualT[varName]["dir"]
+            if(vartype!="color"):
+                raise Exception(f"Expected type [color] but [{vartype}] were given")
+            if(len(varDims)!=2):
+                raise Exception(f"[2] dimentions of variable [{varName}] are needed but it has [{len(varDims)}]")
+            ##Generar cuádruplos de la función
+            self.Quads.append(Quad("openimg",tagAdd,None,varAdd))
+            self.Quads.append(Quad("openimgData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
+            self.QuadCounter += 2;
+        else:
+            raise Exception("")
+
+    def checkReturn(self,ctx):
+        functionName = ctx.getChild(0).getChild(0).getText()
+        functionType = namesTable.functionsT[functionName]["type"]
+        if(functionType == "void"):
+            raise Exception(f"Function [{functionName}] can not be used in an expression because its a void function");
+
     def printQuads(self):
         counter = 1
         
@@ -402,10 +451,14 @@ class Stack:
             print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
-        virtualMachine = VirtualMachine(self.Quads,tables)
+        
         #print(self.Dims)
         #print(namesTable.globalsT)
         print(namesTable.constantsT)
+
+        virtualMachine = VirtualMachine(self.Quads,tables)
+        
+       
         virtualMachine.run()
         print(virtualMachine.virtualMemory.vMemory)
                 

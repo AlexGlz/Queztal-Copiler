@@ -37,10 +37,10 @@ class Memory:
         }
     }"""
     Reference= dict()
-    MemSize = 1000
+    MemSize = 200000
     counter = 1
     scopes = ["Global","Local","Temp","Constant"]
-    types = ["int","float","bool","color"]
+    types = ["int","float","bool","color","tag"]
     Directions = dict()
     for scope in scopes:
         Directions[scope] = dict()
