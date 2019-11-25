@@ -28,6 +28,9 @@ class VirtualMemory:
 
 
     def getLocation(self,address):
+        if(str(address)[0] == "("):
+            address = address[1:-1]
+            return self.getLocation(int(address))
         defaultAdd = address - (address%Memory.MemSize)
         return Memory.Reference[defaultAdd]
 
@@ -63,6 +66,7 @@ class VirtualMemory:
             return valor
 
     def setValue(self,value,address):
+
         #En caso de que se acceda a un apuntador ejemplo: (5000)
         if(str(address)[0]=="("):
             address = address[1:-1]#remover los paréntesis
@@ -240,6 +244,22 @@ class VirtualMachine():
                 arrayX = int(nextQuad.OperandoI)
                 arrayY = int(nextQuad.OperandoD)
                 openImg(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="saveimg"):
+                nextQuad = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+=1
+                imagePath = self.virtualMemory.getValue(izq)
+                arrayAdd = resultado
+                arrayX = int(nextQuad.OperandoI)
+                arrayY = int(nextQuad.OperandoD)
+                saveImg(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="grayscale"):
+                nextQuad = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+=1
+                imagePath = self.virtualMemory.getValue(izq)
+                arrayAdd = resultado
+                arrayX = int(nextQuad.OperandoI)
+                arrayY = int(nextQuad.OperandoD)
+                grayscale(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
                 
             #Avanzar el cúadruplo
             self.QuadCounter += 1

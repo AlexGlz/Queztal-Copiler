@@ -129,6 +129,15 @@ class QuetzalListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by QuetzalParser#var_.
+    def enterVar_(self, ctx:QuetzalParser.Var_Context):
+        pass
+
+    # Exit a parse tree produced by QuetzalParser#var_.
+    def exitVar_(self, ctx:QuetzalParser.Var_Context):
+        pass
+
+
     # Enter a parse tree produced by QuetzalParser#expression.
     def enterExpression(self, ctx:QuetzalParser.ExpressionContext):
         pass

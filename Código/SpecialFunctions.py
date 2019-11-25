@@ -4,34 +4,21 @@ import threading
 import queue
 import time
 
-class hiloRGBtoColor(threading.Thread):
-    def __init__(self, threadID, name, q):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.q = q
-    def run(self):
-      print ("Starting " + self.name)
-      process_data(self.name, self.q)
-      print ("Exiting " + self.name)
 
-def process_data(threadName, q):
-    while not exitFlag:
-        queueLock.acquire()
-        if(not workQueue.empty()):
-            data = q.get()
-            queueLock.release()
-            print( "%s processing %s" % (threadName, data))
-        else:
-            queueLock.release()
-        time.sleep(1)
+#Función que recibe un color hexadecimal en formato de string "#ffffff" convertido a escala de grises
+def colorToGrayScaleRGB(hexValue):
+    #hex color format: #ff0000 => where #ff(red)00(green),00(blue) = >(255,0,0)
+    rValue = np.uint8(int(hexValue[1:3],16)) # Primer par de digitos del codigo hexadecimal correpondientes a "Red" los convierte a entero
+    gValue = np.uint8(int(hexValue[3:5],16)) # Segundo par de digitos del codigo hexadecimal correpondientes a "Green" los convierte a entero
+    bValue = np.uint8(int(hexValue[5:7],16)) # Tercer par de digitos del codigo hexadecimal correpondientes a "Blue" los convierte a entero
+    return [0.2125*rValue,0.7154*gValue,0.0721*bValue] #Retorna un arreglo [r,g,b] convertido a blanco y negro
 
 #Función que recibe un color hexadecimal en formato de string "#ffffff"
 def colorToRGB(hexValue):
     #hex color format: #ff0000 => where #ff(red)00(green),00(blue) = >(255,0,0)
-    rValue = int(hexValue[1:3],16) # Primer par de digitos del codigo hexadecimal correpondientes a "Red" los convierte a entero
-    gValue = int(hexValue[3:5],16) # Segundo par de digitos del codigo hexadecimal correpondientes a "Green" los convierte a entero
-    bValue = int(hexValue[5:7],16) # Tercer par de digitos del codigo hexadecimal correpondientes a "Blue" los convierte a entero
+    rValue = np.uint8(int(hexValue[1:3],16)) # Primer par de digitos del codigo hexadecimal correpondientes a "Red" los convierte a entero
+    gValue = np.uint8(int(hexValue[3:5],16)) # Segundo par de digitos del codigo hexadecimal correpondientes a "Green" los convierte a entero
+    bValue = np.uint8(int(hexValue[5:7],16)) # Tercer par de digitos del codigo hexadecimal correpondientes a "Blue" los convierte a entero
     return [rValue,gValue,bValue] #Retorna un arreglo [r,g,b]
 
 #Función que recibe un arreglo de 3 valores corresopndientes a un color rgb [255,147,90] 
@@ -66,52 +53,20 @@ def getImageHeight(urlPath):
 #Ej. define color birdPhoto[100][100];
 #birdPhoto = openImg(“C:\Users\lizzi\Desktop\Bird.JPG”);
 def openImg(urlPath,dataX,dataY,baseMem,vm):
-    ##INIT THREAD
-    threadList = ["Thread-1", "Thread-2", "Thread-3"]
-    #nameList = ["One", "Two", "Three", "Four", "Five"]
-    queueLock = threading.Lock()
-    workQueue = queue.Queue(10)
-    threads = []
-    threadID = 1
-
-    exitFlag = 0
-
-    # Create new threads
-    for tName in threadList:
-        thread = hiloRGBtoColor(threadID, tName, workQueue)
-        thread.start()
-        threads.append(thread)
-        threadID += 1
-
-
+    imageWidth = getImageWidth(urlPath)
+    imageHeight = getImageHeight(urlPath)
     inputImage = io.imread(urlPath)
     rangeX = range(dataX)
     rangeY = range(dataY)
     for row in rangeX:
-        print(row)
-        queueLock.acquire()
-        workQueue.put({"vm":vm,"row":row,"range":rangeY,"baseMem":baseMem})
-        #for cell in rangeY:  
-        #    if(row > getImageWidth(urlPath) or cell > getImageHeight(urlPath)):
-        #        color = "#ffffff"
-        #    else:
-        #        color = rgbToColor(inputImage[row][cell])
-        #    position = baseMem+row*dataX+cell
-        #    vm.setValue(color,position)
-    queueLock.release()
-
-    # Wait for queue to empty
-    while not workQueue.empty():
-        pass
-
-    # Notify threads it's time to exit
-    exitFlag = 1
-
-    # Wait for all threads to complete
-    for t in threads:
-        t.join()
-    print ("Exiting Main Thread")
-    #saveImg("./prueba.jpg",dataX,dataY,baseMem,vm)
+        for cell in rangeY:  
+            if(row > imageWidth-1 or cell > imageHeight-1):
+                color = "#ffffff"
+            else:
+                color = rgbToColor(inputImage[row][cell])
+            position = baseMem+row*dataX+cell
+            vm.setValue(color,position)
+    
 
 #Recibe como parámetro una matriz de colores y lo guarda como imagen según la ruta de archivo especificada.
 #saveImg(newBirdPhoto,“C:\Users\lizzi\Desktop\GrayBird.JPG”)
@@ -124,6 +79,20 @@ def saveImg(urlPath,dataX,dataY,baseMem,vm):
         for cell in rangeY:
             position = baseMem+row*dataX+cell
             color = vm.getValue(position)
-            image[-1].append(colorToRGB(color))   
-    print(image)         
+            image[-1].append(colorToRGB(color))  
     io.imsave(urlPath, np.array(image))
+    print(f"Image saved as : {urlPath}")
+
+#Recibe una matriz de colores y la convierte la imagen a escala de grises.
+def grayscale(urlPath,dataX,dataY,baseMem,vm):
+    image = []
+    rangeX = range(dataX)
+    rangeY = range(dataY)
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = baseMem+row*dataX+cell
+            color = vm.getValue(position)
+            image[-1].append(colorToGrayScaleRGB(color))     
+    io.imsave(urlPath, np.array(image))
+    print(f"Image saved as : {urlPath}")

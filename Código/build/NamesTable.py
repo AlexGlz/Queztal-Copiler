@@ -48,6 +48,7 @@ class NamesTable():
         
 
     def addLocalVar(self,newVar,type): #function to register a new Local Variable
+        print(newVar)
         if self.actualT == None: self.actualT = dict() 
         if (newVar in self.actualT) or (newVar in self.globalsT) or (newVar in self.functionsT): #checks if name of is not already defined in local, global context or as a name of a function
             raise Exception("Variable '" + newVar + "' already defined") #display exception

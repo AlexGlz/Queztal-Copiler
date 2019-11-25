@@ -9,14 +9,15 @@ from build.intermediateCode import *
 program: {stack.initProgram()}variables* function* main{stack.printQuads()};
 main: {stack.fill(stack.Saltos.pop(),stack.QuadCounter)}TK_FUNC{namesTable.addFunction("main","void",stack.QuadCounter)} TK_MAIN{stack.enterFunc()} SYM_PAREN_OPEN SYM_PAREN_CLOSE SYM_CURLY_BRACK_OPEN variables* statute* SYM_CURLY_BRACK_CLOSE{stack.exitMain()};
 variables: 
-    TK_DEFINE types TYPE_ID {namesTable.addVar($TYPE_ID.text,$types.text)}SYM_SEMI_COL
-    |TK_DEFINE types TYPE_ID ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)}SYM_SQUARE_BRACK_CLOSE)+{namesTable.addVar($TYPE_ID.text,$types.text)} 
-        |({namesTable.addVar($TYPE_ID.text,$types.text)} {stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()}))?
-    
+    TK_DEFINE types TYPE_ID 
+        ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)}SYM_SQUARE_BRACK_CLOSE)+{namesTable.addVar($TYPE_ID.text,$types.text)} 
+        |({namesTable.addVar($TYPE_ID.text,$types.text)} {stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})
+        |{namesTable.addVar($TYPE_ID.text,$types.text)})?
     (SYM_COMMA TYPE_ID
         ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)} SYM_SQUARE_BRACK_CLOSE)+{namesTable.addVar($TYPE_ID.text,$types.text)} 
-        |({namesTable.addVar($TYPE_ID.text,$types.text)} {stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()}))?
-        {namesTable.addVar($TYPE_ID.text,$types.text)} 
+        |({namesTable.addVar($TYPE_ID.text,$types.text)} {stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})
+        |{namesTable.addVar($TYPE_ID.text,$types.text)})?
+        
     )* SYM_SEMI_COL;
 function: TK_FUNC{stack.enterFunc()} 
         (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text,stack.QuadCounter)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text,stack.QuadCounter)})  
@@ -35,8 +36,8 @@ constants:
     | TYPE_COLOR{stack.addType("color")};
 
 prints: TK_PRINT SYM_PAREN_OPEN{stack.addOp('(')} expression{stack.generatePrint()} (SYM_COMMA expression{stack.generatePrint()})* SYM_PAREN_CLOSE{stack.removeP()} SYM_SEMI_COL; 
-read: TK_READ SYM_PAREN_OPEN TYPE_ID{stack.addOperand($TYPE_ID.text)} (SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE(SYM_SQUARE_BRACK_OPEN expression SYM_SQUARE_BRACK_CLOSE)*)? SYM_PAREN_CLOSE{stack.generateRead()} SYM_SEMI_COL;
-
+read: TK_READ SYM_PAREN_OPEN var_ SYM_PAREN_CLOSE{stack.generateRead()} SYM_SEMI_COL;
+   
 statute: returning|condition|loop|prints|read|(callfunc SYM_SEMI_COL)|(specfunct SYM_SEMI_COL)|assignation;
 assignation: 
     TYPE_ID{stack.addOperand($text)}  SYM_ASSIGN{stack.addOp('=')} (specfunct|(expression{stack.exitAssign()})) SYM_SEMI_COL
@@ -51,10 +52,12 @@ stack.enterCondition()}
 
 var_cte: constants{stack.addConstant($text)}
     | callfunc{stack.checkReturn($ctx)}
-    | TYPE_ID{stack.addOperand($text)}
-    | TYPE_ID{stack.addOperand($text)} {stack.initDimVar($TYPE_ID.text)}(SYM_SQUARE_BRACK_OPEN expression{stack.dimEnter($TYPE_ID.text)} SYM_SQUARE_BRACK_CLOSE)+{stack.exitDimVar($TYPE_ID.text)};
-   //| TYPE_ID SYM_PAREN_OPEN{stack.addOp('(')} expression (SYM_COMMA expression)* SYM_PAREN_CLOSE;
+    | var_;
     
+var_:
+    TYPE_ID{stack.addOperand($text);stack.checkVarDims($text)}
+    | TYPE_ID{stack.addOperand($text)} {stack.initDimVar($TYPE_ID.text)}(SYM_SQUARE_BRACK_OPEN expression{stack.dimEnter($TYPE_ID.text)} SYM_SQUARE_BRACK_CLOSE)+{stack.exitDimVar($TYPE_ID.text)};
+  
     
 //EXPRESIONES->EXP->TERM->FACTOR
 expression:  expLogic{stack.exitExpLogic()}((SYM_OR{stack.addOp('||')} | SYM_AND{stack.addOp('&&')}) expLogic{stack.exitExpLogic()})*;
@@ -78,8 +81,8 @@ callfunc: TYPE_ID {stack.enterCallFunc($TYPE_ID.text)}
 loop: TK_WHILE SYM_PAREN_OPEN expression{stack.enterCicle()} SYM_PAREN_CLOSE block{stack.exitCicle()};
  
 //SPECIAL FUNCTIONS
-openimg: TK_OPENIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)}  SYM_COMMA TYPE_ID{stack.openimg($TYPE_ID.text)} SYM_PAREN_CLOSE ;
-saveimg: TK_SAVEIMG SYM_PAREN_OPEN TYPE_ID SYM_COMMA CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;
+openimg: TK_OPENIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)}  SYM_COMMA var_{stack.openimg($TYPE_ID.text)} SYM_PAREN_CLOSE ;
+saveimg: TK_SAVEIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)} SYM_COMMA var_{stack.saveImg($TYPE_ID.text)} SYM_PAREN_CLOSE;
 color_replace: TK_COLOR_REPLACE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL;
 grayscale: TK_GRAYSCALE SYM_PAREN_OPEN TYPE_ID SYM_PAREN_CLOSE SYM_SEMI_COL;
 color_filter: TK_COLOR_REPLACE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL;

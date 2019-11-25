@@ -1,17 +1,9 @@
-func int suma(int x, int y){
-    return x+y;
-}
-
-func void test(){
-    print("HOLA");
-    return;
-}
 
 func main(){  
-    define int x[10];
-    define color c[256][228];
-    define int i;
-    
-    openImg("media/image1.png",c);
-    
+    define int x[5][5],y,z[10];
+    define color c;
+    define int a;
+    y = 0;
+    y = y +1;
+    read(y);
 }

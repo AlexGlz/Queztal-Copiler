@@ -321,6 +321,13 @@ class Stack:
             self.Opd.append(tempDir)
             self.Types.append(functVarType)
 
+    ##Funcion para verificar si no se está una función dimensionada como tal
+    def checkVarDims(self,varName):
+        print("ENTRE");
+        print("CHECK:",varName, len(namesTable.actualT[varName]["dim"]))
+        if(len(namesTable.actualT[varName]["dim"]) != 0):
+            raise Exception(f"[{varName}] is an Array")
+
     ##Inicializar el acceso a una variable dimensionada
     def initDimVar(self,varName):
         listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
@@ -371,6 +378,8 @@ class Stack:
         self.generateVer(aux,0,listaDim[frontDim-1]["ls"])
         if(frontDim<len(listaDim)):        
             aux=self.Opd.pop() #Obtiene el index dentro de casilla
+            indexType = self.Types.pop() #obtener el típo del índice
+            if(indexType != "int"): raise Exception("Index must be int")
             T = Memory.assignMemory("Temp","int",1)
             self.tempCounter+=1
             #print("*",aux,listaDim[frontDim-1]["m"],T)
@@ -381,13 +390,14 @@ class Stack:
             mValue = int(listaDim[frontDim-1]["m"])
             self.Types.append("int")
             self.addConstant(str(mValue))
+            self.Types.pop()
             mAdd = self.Opd.pop()
             
             self.Quads.append(Quad("*",aux,mAdd,T))
             self.QuadCounter+=1
 
             self.Opd.append(T);
-            self.Types.append("int")
+            #self.Types.append("int")
 
         if(frontDim>1):
             aux2 = self.Opd.pop() #SN*MN
@@ -400,7 +410,9 @@ class Stack:
             self.QuadCounter+=1
 
         if(frontDim==len(listaDim)):
-            aux = self.Opd.pop()
+            aux = self.Opd.pop() #Valor del índice
+            indexType = self.Types.pop() #obtener el típo del índice
+            if(indexType != "int"): raise Exception("Index must be int")
             T = Memory.assignMemory("Temp","int",1)
             
 
@@ -409,18 +421,18 @@ class Stack:
             ##Generar u obtener dirección de la constante de la dirección inicial del arreglo
             addressValue = namesTable.actualT[frontName]["dir"]
             self.Types.append("int")
-            self.addConstant(str(addressValue))
+            self.addConstant(addressValue)
+            self.Types.pop()
             addressLocation = self.Opd.pop()
-
+            
 
             self.Quads.append(Quad("+",aux,addressLocation,T))
             self.QuadCounter+=1
             self.Opd.append("(" +str(T)+")")
         #print("VER",self.Opd.pop(),"1",limSup)
 
-    ##Código para funciones auxiliares
+    ##Código para funciones especiales
     def openimg(self,varName):
-        print(namesTable.actualT)
         if(True): 
             tagType = self.Types.pop()
             tagAdd = self.Opd.pop()
@@ -430,13 +442,28 @@ class Stack:
             if(vartype!="color"):
                 raise Exception(f"Expected type [color] but [{vartype}] were given")
             if(len(varDims)!=2):
-                raise Exception(f"[2] dimentions of variable [{varName}] are needed but it has [{len(varDims)}]")
+                raise Exception(f"This function needs [2] dimentions in variable [{varName}] but it has [{len(varDims)}]")
             ##Generar cuádruplos de la función
             self.Quads.append(Quad("openimg",tagAdd,None,varAdd))
             self.Quads.append(Quad("openimgData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
             self.QuadCounter += 2;
         else:
             raise Exception("")
+
+    def saveImg(self,varName):
+        tagType = self.Types.pop()
+        tagAdd = self.Opd.pop()
+        vartype = namesTable.actualT[varName]["type"];
+        varDims = namesTable.actualT[varName]["dim"];
+        varAdd = namesTable.actualT[varName]["dir"]
+        if(vartype!="color"):
+            raise Exception(f"Expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"[2] dimentions of variable [{varName}] are needed but it has [{len(varDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("saveimg",tagAdd,None,varAdd))
+        self.Quads.append(Quad("saveimgData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
+        self.QuadCounter += 2;
 
     def checkReturn(self,ctx):
         functionName = ctx.getChild(0).getChild(0).getText()
@@ -457,10 +484,9 @@ class Stack:
         print(namesTable.constantsT)
 
         virtualMachine = VirtualMachine(self.Quads,tables)
-        
-       
         virtualMachine.run()
-        print(virtualMachine.virtualMemory.vMemory)
+        
+        #print(virtualMachine.virtualMemory.vMemory)
                 
 stack = Stack()
 
