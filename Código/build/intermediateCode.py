@@ -38,7 +38,7 @@ class Stack:
         self.O.pop()
     def addOperand(self,name): #adds opperand
         if name in namesTable.functionsT:
-            raise Exception(f"Cannot use [{name}] function as a varable.")
+            raise Exception(f"Cannot use [{name}] function as a expression.")
         if name in namesTable.globalsT: #Operando must already be defined in global
             #self.Opd.append(name) #Add name to Operand Vector
             self.Opd.append(namesTable.globalsT[name]["dir"]) #Add memory address to Operand Vector
@@ -51,16 +51,16 @@ class Stack:
             raise Exception("Operand '" + name + "' not defined") #display exception
     
     ##Funciones para el manejo de constantes
-    def addConstant(self,const):
+    def addConstant(self,const):#Regresa la dirección de una constante dada
         type = self.Types.pop()
         self.Types.append(type)
-        if(namesTable.constantsT.get(const)):
+        if(namesTable.constantsT.get(const)):#Si ya existe regresa simplemente su dirección de memoria
             self.Opd.append(namesTable.constantsT[const]["dir"])
-        else:
+        else:#Si no le asigna un nuevo espacio de memory y retorna la nueva dirección
             memoryAdd = Memory.assignMemory("Constant",type,1)
             namesTable.constantsT[const] ={"type":type,"dir":memoryAdd}
             self.Opd.append(memoryAdd) 
-         
+    #Agrega un tipo a la pila de tipo
     def addType(self,tipo):
         self.Types.append(tipo)
     
@@ -106,22 +106,23 @@ class Stack:
     #####################GENERADORES DE CUÁDRUPLOS#################################
     #format: 4 * A B t3
     def generateBinaryQuad(self):
-        derOp = self.Opd.pop()
+        #OBTENER OPERANDOS y sus Tipos para verificar compatibilidad
+        derOp = self.Opd.pop() 
         izqOp = self.Opd.pop()
         derOpType = self.Types.pop()
         izqOpType = self.Types.pop()
         op = self.O.pop()
         #temp = "t"+str(self.tempCounter)
-        tempType = semanticCube.cube[izqOpType][derOpType][op]
+        tempType = semanticCube.cube[izqOpType][derOpType][op] #El cubo semántico arrojará None si no son compatibles
         if tempType == None:
-            raise Exception(f"Operand '{izqOp}'({izqOpType}) is incompatible with operand '{derOpType}'({derOpType}) with operator: {op}")
+            raise Exception(f"Operand({izqOpType}) is incompatible with operand ({derOpType}) with operator: {op}")
         self.Types.append(tempType)
-        tempDir = Memory.assignMemory("Temp",tempType,1)
+        tempDir = Memory.assignMemory("Temp",tempType,1)#Crear nueva variable temporal 
         self.Opd.append(tempDir)
-        #print(str(self.QuadCounter)+"- " + op + " " + str(izqOp) + " " + str(derOp) + " " + "t"+str(self.tempCounter))
-        self.Quads.append(Quad(op,izqOp,derOp,tempDir))
+        self.Quads.append(Quad(op,izqOp,derOp,tempDir))#Generar Cuádruplo
         self.QuadCounter+=1
     
+    #Genera un cuádruplo unario, en este caso solamente tomará un solo operador de la pila de operadores
     #format: 6 = C _ F
     def generateUnaryQuad(self):
         op = self.O.pop()
@@ -131,12 +132,11 @@ class Stack:
         asignedType= self.Types.pop()
         tempType = semanticCube.cube[asignedType][resultType][op]
         if tempType == None:
-            raise Exception(f"Operand '{asigned}'({asignedType}) is incompatible with operand '{result}'({resultType}) with operator: {op}")
-            #self.Types.append(tempType)
-        
+            raise Exception(f"Operand ({asignedType}) is incompatible with operand ({resultType}) with operator: {op}")
         self.Quads.append(Quad(op,result,None,asigned))
         self.QuadCounter+=1
     
+    #Función para generar el cuádruplo del print
     #format: 6 print _ _ A
     def generatePrint(self):
         out = self.Opd.pop()
@@ -174,19 +174,20 @@ class Stack:
         self.QuadCounter+=1
     #####################FIN GENERADORES DE CUÁDRUPLOS#################################
 
+    ##Al momento de acceder a un parámetro en la llamad de una función
     def getParam(self, fName):
         parameterCounter = self.ParamCounter[-1][fName] #Contador actual de los parámetros dados
         parameterNumber = namesTable.functionsT[fName]['parNum'] #Número de parámetos que recibe la función
         #If number of given parameters exceed's functions number of expected parameters
         if (parameterCounter > parameterNumber-1):
             raise Exception(f"In function [{fName}]: expected [{parameterNumber}] parameters but more were given")  
-        paramName = namesTable.functionsT[fName]["parameters"][parameterCounter]
+        paramName = namesTable.functionsT[fName]["parameters"][parameterCounter] #Obtener nombre del parámetros
         paramExpectedType = namesTable.functionsT[fName]["parameters"][parameterCounter][1]
         paramActualType = self.Types.pop() 
         #Type doesn't match expected parameter type
         if(paramExpectedType != paramActualType):
             raise Exception(f"In function [{fName}], parameter #{parameterCounter}: Expected type [{paramExpectedType}], but [{paramActualType}] were given")
-        ##AQUI
+        ##Generar cuádruplo de parámetro
         self.generateParam(parameterCounter+1)
         self.ParamCounter[-1][fName]+=1
     
@@ -223,7 +224,8 @@ class Stack:
         self.QuadCounter+=1
         
 
-    ##RETURN
+    ##Generador de cuádruplos para el Return
+    #El código verifica si la función es de tipo void u otro y ve si es válido hacer return
     def generateReturn(self):
         function = namesTable.actualFuncName
         functType = namesTable.functionsT[function]["type"]
@@ -235,64 +237,76 @@ class Stack:
         self.QuadCounter+=1
         
     ###RELLENADOR DE CUÁDRUPLOS
+    ##Usado para hacer fills a los GoTo principalmente
     def fill(self,quad,position):
         self.Quads[quad-1].Resultado = position
 
+    ##Al entrar al if
+    #Genera un GoToF y agrega el contador a la pila de saltos
     def enterCondition(self):
         self.Saltos.append(self.QuadCounter)
         self.generateGoToF()
     
+    #Caundo se entra a un else relllena el GoTo F de su if correspondiente, agrega el contador a la pila de saltos
     def enterElse(self):  
         salto=self.Saltos.pop()
         self.Saltos.append(self.QuadCounter)
         self.generateGoTo()
         self.fill(salto,self.QuadCounter)        
        
+    #Función usada al momento de salir de un bloque if o if-else
+    #rellena los GoTo's pendientes en el stack de saltos
     def exitCondition(self):
         salto = self.Saltos.pop()
         self.fill(salto,self.QuadCounter)
 
+    #Punto neuráligo al entrar a un ciclo Whiel
     def enterCicle(self):
-        self.Saltos.append(self.QuadCounter-1)
-        self.generateGoToF()
-        self.Saltos.append(self.QuadCounter-1)
+        self.Saltos.append(self.QuadCounter-1)#Agregar contador a la pila de saltos
+        self.generateGoToF() #Generar Goto
+        self.Saltos.append(self.QuadCounter-1)#Agregar contador a la pila de saltos
 
+    #Punto neurálgico a la salida de un ciclo whole
     def exitCicle(self):
-        saltoF = self.Saltos.pop()
-        saltoInicio = self.Saltos.pop()
-        self.generateGoTo()
-        self.fill(self.QuadCounter-1,saltoInicio)
-        self.fill(saltoF,self.QuadCounter)
+        saltoF = self.Saltos.pop() #Salto del GOTF
+        saltoInicio = self.Saltos.pop() #Salto al inicio del ciclo
+        self.generateGoTo() #Generar nuevo GoTO 
+        self.fill(self.QuadCounter-1,saltoInicio) #Rellenar GoTo hacia el inicio
+        self.fill(saltoF,self.QuadCounter) #Rellnar GotoF hacia el final
 
+    #Punto neurálgico de entrada a una función
     def enterFunc(self):
-        namesTable.initLocalT()
+        namesTable.initLocalT() #Reiniciar tabla de variables locales
         self.tempCounter = 1
-        
+    
+    #Punto neuráligo de salida de declaración de una función
     def exitFunc(self):
-        namesTable.functionsT[namesTable.actualFuncName]["vars"] = self.countVarByTypeScope("Local")
-        namesTable.functionsT[namesTable.actualFuncName]["temps"] = self.countVarByTypeScope("Temp")
+        namesTable.functionsT[namesTable.actualFuncName]["vars"] = self.countVarByTypeScope("Local") #Agregar conteo de variables locales definidas
+        namesTable.functionsT[namesTable.actualFuncName]["temps"] = self.countVarByTypeScope("Temp") #Agregar conteo de variables temporales definidas
         namesTable.parameterC = 0
         namesTable.varCnt = 0
-        Memory.resetMemory("Local")
+        Memory.resetMemory("Local") #Reiniciar declaraciones de memoria
         Memory.resetMemory("Temp")
         ##ENDPROC SE GENERA EN FUNCIONES QUE NO SON main
-        
         if(namesTable.actualFuncName != "main"):
-            self.generateEndProc()
+            self.generateEndProc()#Generar cuadruplo ENDPROC
 
+    #Recibe un scope y retorna la cantidad de variables definidas separadas por los tipos.
     def countVarByTypeScope(self,scope):
         varCount = dict()
         for k in Memory.Directions[scope].keys():
-            varCount[k] = Memory.Directions[scope][k]["declared"] 
+            varCount[k] = Memory.Directions[scope][k]["declared"] #Recopila la información de Memory Manager
         return varCount      
     
+    #Punto neurálico de la salida del main
     def exitMain(self):
-        self.Quads.append(Quad("end",None,None,None))
+        self.Quads.append(Quad("end",None,None,None))#Genera cuádruplo final
         self.exitFunc()
     
+    #Punto neuráligo de inicio del programa
     def initProgram(self):
         self.Saltos.append(1)
-        self.generateGoTo()
+        self.generateGoTo() #Generar GoTo inicial que suele apuntar hacia el main
 
     #callfunc: TYPE_ID SYM_PAREN_OPEN (expression (SYM_COMMA expression)*)? SYM_PAREN_CLOSE SYM_SEMI_COL;
     def enterCallFunc(self, funcName):
@@ -301,16 +315,17 @@ class Stack:
         else:            
             raise Exception("Function '" + funcName + "' not defined") #display exception
 
+    #Punto neuráligo que se llama al momento de haber termminado de llamar a una función.
+    #Recibe como parámetro el nombre de la funcion llamada
     def exitCallFunc(self,funcName):
-        self.generateGoSub(funcName)
+        self.generateGoSub(funcName) #Generar cuádrulpo Go sub
         self.ParamCounter.pop()
         if(namesTable.functionsT[funcName]["type"] != "void"): #Si la funcion no es void generar su cúadruplo para el return
             functVarAdd = namesTable.globalsT[funcName]["dir"]
             functVarType = namesTable.globalsT[funcName]["type"]
             
-            tempDir = Memory.assignMemory("Temp",functVarType,1)
+            tempDir = Memory.assignMemory("Temp",functVarType,1) #Generar el cuádruplo que almacenará la variable temporal del return
             self.tempCounter +=1;
-
             self.O.append("=")
             self.Opd.append(tempDir)
             self.Opd.append(functVarAdd)
@@ -359,8 +374,8 @@ class Stack:
         self.Dims.pop() #Eliminar el tope
 
     ##Al detectar el acceso a un índice
+    #Genera los cuádruplos requeridos para obtener el desfase de la memoria con base a los índices
     def dimEnter(self,varName):
-       
         #Agrega la dimensión a la pila de dimesiones
         if(len(self.Dims)>0):
             front = self.Dims[-1] #Front guarda la dimensión agregada más recientemente ##PENDIENTE: CHECAR SI SE REPITE EL NOMBRE ARREGLO DENTRO DE SÍ MISMO X[X[]][]
@@ -385,8 +400,6 @@ class Stack:
 
         if(frontDim > len(listaDim)): #Checa que el número de dimensiones no exceda al número de dimensiones dadas en la definición de la variable
             raise Exception("Variable '" + frontName + "' with "+ str(frontDim) + " Dimensions not defined, " + str(len(listaDim)) + " where expected") #display exception
-
-        print(listaDim)
         
         aux = self.Opd[-1]        
 
@@ -448,7 +461,6 @@ class Stack:
             self.Quads.append(Quad("+",aux,addressLocation,T))
             self.QuadCounter+=1
             self.Opd.append("(" +str(T)+")")
-        #print("VER",self.Opd.pop(),"1",limSup)
 
     ##Código para funciones especiales
 
@@ -679,18 +691,14 @@ class Stack:
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
         
-        #print(self.Dims)
-        #print(namesTable.globalsT)
-        print(namesTable.constantsT)
+    
         namesTable.globalsT["vars"] = self.countVarByTypeScope("Global") #Obtener el conteo de memoria global
         
         virtualMachine = VirtualMachine(self.Quads,tables,Memory.MemSize)
 
-        #print(virtualMachine.virtualMemory.vMemory)
-
+      
         virtualMachine.run()
         
-        #print(virtualMachine.virtualMemory.vMemory)
                 
 stack = Stack()
 

@@ -20,6 +20,7 @@ class VirtualMemory:
             "Stack":[]    
         }
         counter = 1
+        self.StackSize = 0
         self.MemSize = MemSize
         self.Reference= dict()
         scopes = ["Global","Local","Temp","Constant"]
@@ -55,6 +56,8 @@ class VirtualMemory:
             valor=self.vMemory[scope][type][index]
         else:
             valor=self.vMemory["Stack"][-1][scope][type][index] #El -1 permite acceder al último elemento del stack
+        if(valor==None):
+            raise Exception("Accessed to a variable or index without defining a value before")
         if(type == "int"):
             return int(valor)
         elif(type == "float"):
@@ -102,7 +105,11 @@ class VirtualMemory:
         for (scope,types) in sizes.items():
             block[scope] = dict()
             for (type,size) in types.items():
+                self.StackSize += size
+                if(self.StackSize>self.MemSize):
+                    raise Exception("Function Stack Memory Out of Bounds")
                 block[scope][type]  = self.initializeMemBlock(size)
+        
         self.vMemory["Stack"].append(block)
 
 
@@ -330,6 +337,8 @@ class VirtualMachine():
                 arrAdd = resultado
                 imageHeight = int(encodeSteganographyData.OperandoI)
                 imageWidth = int(encodeSteganographyData.OperandoD)
+                if(len(tag)*9>=imageHeight*imageWidth):
+                    raise Exception("You need a bigger image in order to encode a bigger string")
                 encodeSteganography(tag,imageHeight,imageWidth,arrAdd,self.virtualMemory)
             elif(operador=="decodeStenography"):
                 imageBaseAdd = resultado

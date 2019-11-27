@@ -1,14 +1,41 @@
 define color c[200][200];
-define color palette[9];
-
+define color match[100][100];
+define color cPal[5];
 
 func main(){  
 define int x=0;
-   openImg("media/imagen6.png",c);
-   encodeSteganography(c,"Esto es un mensaje muy encriptado hay bau");
-    print(c[0][0]);
-    saveImg("secreto.jpg",c);
-    //openImg("secreto.jpg",c);
-    print(c[0][0]);
-   decodeSteganography(c);
+    openImg("media/image1.png",c);
+    grayscale(c);
+    saveImg("grayscale.png",c);
+    
+    openImg("media/image1.png",c);
+    colorReplace(c,#000000,#ffffff);
+    saveImg("replaced.png",c);
+    
+    openImg("media/image1.png",c);
+    colorFilter(c,#1b5cc8);
+    saveImg("filtered.png",c);
+    
+    openImg("media/image1.png",c);
+    edgeDetection(c);
+    saveImg("edged.png",c);
+
+    openImg("media/image1.png",c);
+    saveScaleImg("scaled.png",c,-1,-1);
+
+    openImg("media/image1.png",c); 
+    getColorPalette(c,cPal,5);
+    print(cPal[0],cPal[1],cPal[2],cPal[3],cPal[4]);
+
+    openImg("media/image1.png",c); 
+    openImg("media/image4.png",match);
+    colorMatchImage(c,match);
+    saveImg("matched.png",c);
+
+    openImg("media/image1.png",c);
+    encodeSteganography(c,"Este es un mensaje encriptado");
+    saveImg("encriptado.png",c);
+
+    openImg("encriptado.png",c);
+    decodeSteganography(c);  
 }

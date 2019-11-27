@@ -1,0 +1,15 @@
+func main(){
+    define int n1=0,n2=1,num;
+    define int i=0;
+    print("Intrucir numero de elementos de la secuencia:");
+    read(num);
+    num = num-2;
+    print(n1,n2);
+
+    while(i<num){
+        n2 = n1 + n2;
+        n1 = n2 - n1;
+        print(n2);
+        i = i+1;
+    }
+}

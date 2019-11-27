@@ -1,0 +1,23 @@
+func int fibo(int n){
+    if(n==0 || n == 1){
+        return n;
+    }else{
+        return fibo(n-2) + fibo(n-1);
+    }
+}
+
+func main(){
+    define int i=0, num;
+    num = -1;
+
+    //FIBONACCI RECURSIVO
+    while(num<0){
+        print("Introducir numero de digitos de la serie a mostrar:");
+        read(num);
+    }
+
+    while(i<num){
+        print(fibo( i));
+        i = i+1;
+    }
+}

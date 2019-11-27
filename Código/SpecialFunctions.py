@@ -213,22 +213,14 @@ def getImageHeight(urlPath):
 def openImg(urlPath,dataX,dataY,baseMem,vm):
     imageWidth = getImageWidth(urlPath)
     imageHeight = getImageHeight(urlPath)
-    inputImaget = Image.open(urlPath, 'r') 
-    inputImage = Image.new("RGB", inputImaget.size, (255,255,255))
-    inputImage.paste(inputImaget,inputImaget)
-
-    inputImage = np.array(inputImage.getdata()).reshape(inputImage.size[0], inputImage.size[1], 3)
-    imageWidth = inputImage.shape[1]
-    imageHeight = inputImage.shape[0]
+    inputImage = io.imread(urlPath)
     rangeX = range(dataX)
     rangeY = range(dataY)
-    print(imageHeight)
     for row in rangeX:
         for cell in rangeY:  
             if(row >imageHeight -1 or cell > imageWidth-1):
                 color = "#ffffff"   
             else:
-                #print(row,cell)
                 color = rgbToColor(inputImage[row][cell])
             position = baseMem+row*dataY+cell
             vm.setValue(color,position)    
@@ -247,7 +239,9 @@ def saveImg(urlPath,dataX,dataY,baseMem,vm):
             color = vm.getValue(position)
             image[-1].append(colorToRGB(color))  
     io.imsave(urlPath,np.array(image))
+    
     print(f"Image saved as : {urlPath}")
+    
 
 #Recibe una matriz de colores y la convierte la imagen a escala de grises.
 def grayscale(dataX,dataY,baseMem,vm):
@@ -392,7 +386,55 @@ def encodeSteganography(tag,imageH,imageW,imageBaseAdd,vm):
         for cell in rangeY:
             position = imageBaseAdd+row*imageW+cell
             color = rgbToColor(data[row][cell])
-            #print(color!=vm.getValue(position))
+            
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
             vm.setValue(color,position)
 
 def decodeSteganography(imageH,imageW,imageBaseAdd,vm):

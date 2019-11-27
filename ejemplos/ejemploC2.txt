@@ -1,27 +1,30 @@
-define int iHeight;
-define int iWidth;
-define color[iWidth][iHeight]  birdPhoto;
-define color newBirdPhoto;
-define color[960][720] referencePhoto;
+func int factorial(int n)
+{
+  if (n == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return(n * factorial(n-1));
+  }
+}
+
+func int iterativeFactorial(int n)
+{
+    define int fact = 1;
+    define int num, i;
+    num = n;
+    i = num;
+    while(i>=1)
+    {
+       fact=fact*i;
+       i = i -1;
+    }
+    return fact;
+}
 
 func main(){
-
-iHeight = getImageHeight("C:\Users\lizzi\Desktop\Bird.JPG");
-iWidth = getImageHeight("C:\Users\lizzi\Desktop\Bird.JPG");
-birdPhoto = openImg("C:\Users\lizzi\Desktop\Bird.JPG");
-
-newBirdPhoto = grayScale(birdPhoto);
-newBirdPhoto = color_replace(birdPhoto, #111111, #ffffff);
-newbBirdPhoto = colo_filter(birdPhoto,#EFEFEF);
-newbBirdPhoto = edgeDetection(birdPhoto);
-newbBirdPhoto = scaleImg(birdPhoto,-2.0,1.0);
-birdPhotoPalette = getColorPalette(birdPhoto,4);
-
-referencePhoto = openImg("C:\Users\lizzi\Desktop\Reference.JPG");
-newbBirdPhoto = colorMatchImage(birdPhoto,referencePhoto);
-
-newbBirdPhoto = encodeSteganography(birdPhoto,"Este es un mensaje encriptado");
-print(decodeSteganogrphy(newBirdPhoto));
-
-saveImg(newBirdPhoto,"C:\Users\lizzi\Desktop\NewBird.JPG");
+    print(factorial(5));
+    print(iterativeFactorial(5));
 }

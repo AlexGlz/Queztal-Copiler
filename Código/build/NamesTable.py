@@ -39,7 +39,6 @@ class NamesTable():
         self.actualR = self.actualR * dimSize
     
     def dimentionDef(self):
-        #print(self.actualR)
         suma = 0
         for i in range(0,len(self.dimensions)):
             self.dimensions[i]["m"] = self.actualR/(self.dimensions[i]["ls"]+1)
@@ -48,7 +47,6 @@ class NamesTable():
         
 
     def addLocalVar(self,newVar,type): #function to register a new Local Variable
-        print(newVar)
         if self.actualT == None: self.actualT = dict() 
         if (newVar in self.actualT) or (newVar in self.globalsT) or (newVar in self.functionsT): #checks if name of is not already defined in local, global context or as a name of a function
             raise Exception("Variable '" + newVar + "' already defined") #display exception
@@ -79,8 +77,6 @@ class NamesTable():
             self.dimensions = []
             self.actualR = 1
             self.varSize = 1
-            print(self.globalsT,"AQUIII")
-            print(Memory.Directions)
             return True
 
     #Identifica el contexto actual de la creación de variables, posteriormente guarda la variable como local
@@ -104,7 +100,6 @@ class NamesTable():
 
     #Inicializa la tabla de variables locales
     def initLocalT(self):
-        print(self.actualT)
         self.actualT = dict()
         self.parameterC = 0
 

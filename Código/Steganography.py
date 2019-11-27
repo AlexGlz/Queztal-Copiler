@@ -14,12 +14,17 @@ def frombits(bits):
         chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
     return ''.join(chars)
 
+#Recibe una matriz de pixeles y el mensajes a encriptar
+#La encriptación se basa en la converisión de cada valor R, G y V. Si estos son pares
+#entonces arrojarán un valor 0 y si son pares un 1, con la combinación de 3 pixeles RGB 
+#se forma un número binario de 9 dígitos, 8 se usan para obtener el valor ascii y el último se usa para saber
+# si restan caracteres para codificar, 0 para continuar y y para detenerse
 def encode(data,message):
     messageCounter = 0
     data = np.array(data)
     char = tobits(message[0])
     bitCounter = 0;
-    for row in range(data.shape[0]):
+    for row in range(data.shape[0]):#Recorrer pixel por pixel
         for cell in range(data.shape[1]):
             for color in range(3):      
                 if(bitCounter==8):
@@ -32,7 +37,7 @@ def encode(data,message):
                     else:
                         if(data[row][cell][color]%2==1):
                             data[row][cell][color] -=1
-                        char = tobits(message[messageCounter])
+                        char = tobits(message[messageCounter])#Convertir el siguiente caracter
                 elif(data[row][cell][color]%2 != char[bitCounter]):
                     data[row][cell][color] += -1
                 bitCounter+=1

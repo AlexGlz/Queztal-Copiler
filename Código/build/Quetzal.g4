@@ -16,8 +16,7 @@ variables:
     (SYM_COMMA TYPE_ID
         ((SYM_SQUARE_BRACK_OPEN TYPE_INT{namesTable.addDimension($TYPE_INT.text)} SYM_SQUARE_BRACK_CLOSE)+{namesTable.addVar($TYPE_ID.text,$types.text)} 
         |({namesTable.addVar($TYPE_ID.text,$types.text)} {stack.addOperand($TYPE_ID.text)}SYM_ASSIGN{stack.addOp('=')} expression {stack.exitAssign()})
-        |{namesTable.addVar($TYPE_ID.text,$types.text)})?
-        
+        |{namesTable.addVar($TYPE_ID.text,$types.text)})?        
     )* SYM_SEMI_COL;
 function: TK_FUNC{stack.enterFunc()} 
         (types TYPE_ID{namesTable.addFunction($TYPE_ID.text,$types.text,stack.QuadCounter)} | TK_VOID TYPE_ID{namesTable.addFunction($TYPE_ID.text,$TK_VOID.text,stack.QuadCounter)})  
@@ -75,7 +74,7 @@ returning: TK_RETURN expression{stack.generateReturn()} SYM_SEMI_COL
 callfunc: TYPE_ID {stack.enterCallFunc($TYPE_ID.text)} 
         SYM_PAREN_OPEN {stack.addOp('(')}
         (expression{stack.getParam($TYPE_ID.text)} (SYM_COMMA expression{stack.getParam($TYPE_ID.text)})*)? 
-        SYM_PAREN_CLOSE{stack.exitParams($TYPE_ID.text)}{stack.removeP()}
+        {stack.exitParams($TYPE_ID.text)}SYM_PAREN_CLOSE{stack.removeP()}
         {stack.exitCallFunc($TYPE_ID.text)};
  
 loop: TK_WHILE SYM_PAREN_OPEN expression{stack.enterCicle()} SYM_PAREN_CLOSE block{stack.exitCicle()};
@@ -92,8 +91,8 @@ getColorPalette: TK_GET_COLOR_PALETTE SYM_PAREN_OPEN TYPE_ID{stack.Opd.append($T
 colorMatchImage: TK_COLOR_MATCH_IMAGE SYM_PAREN_OPEN TYPE_ID{stack.Opd.append($TYPE_ID.text)} SYM_COMMA TYPE_ID SYM_PAREN_CLOSE{stack.colorMatchImage($TYPE_ID.text)} ;
 encodeSteganography: TK_ENCODE_STEGANOGRAPHY SYM_PAREN_OPEN TYPE_ID SYM_COMMA CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)} SYM_PAREN_CLOSE {stack.encodeSt($TYPE_ID.text)};
 decodeSteganography: TK_DECODE_STEGANOGRAPHY SYM_PAREN_OPEN TYPE_ID SYM_PAREN_CLOSE {stack.decodeSt($TYPE_ID.text)};
-getImageHeight: TK_GET_IMAGE_HEIGHT SYM_PAREN_OPEN CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;
-getImageWidth: TK_GET_IMAGE_WIDTH SYM_PAREN_OPEN CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;
+//getImageHeight: TK_GET_IMAGE_HEIGHT SYM_PAREN_OPEN CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;
+//getImageWidth: TK_GET_IMAGE_WIDTH SYM_PAREN_OPEN CTE_TAG SYM_PAREN_CLOSE SYM_SEMI_COL;
  
 specfunct:openimg | saveimg | grayscale | color_replace | color_filter | edgeDetection | scaleImg | getColorPalette | colorMatchImage | encodeSteganography | decodeSteganography | getImageHeight |  getImageWidth;
  
