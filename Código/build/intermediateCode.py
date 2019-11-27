@@ -687,7 +687,7 @@ class Stack:
         counter = 1
         
         for quad in self.Quads:
-            print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
+            #print(counter, quad.Operador, quad.OperandoI, quad.OperandoD, quad.Resultado)
             counter+=1
         tables = {"functions":namesTable.functionsT,"globals":namesTable.globalsT,"constants":namesTable.constantsT}
         
