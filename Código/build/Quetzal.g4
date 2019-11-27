@@ -64,7 +64,7 @@ expression:  expLogic{stack.exitExpLogic()}((SYM_OR{stack.addOp('||')} | SYM_AND
 expLogic: exp{stack.exitExp()} (logic_op{stack.addOp($logic_op.text)} exp{stack.exitExp()})?;
 exp:  term{stack.exitTerm()}  ((SYM_PLUS{stack.addOp('+')} | SYM_MINUS{stack.addOp('-')}) term{stack.exitTerm()})*;
 term:  factor{stack.exitFactor()} (( SYM_MULT{stack.addOp('*')} |  SYM_DIV{stack.addOp('/')} ) factor{stack.exitFactor()})*;
-factor:  (SYM_PAREN_OPEN{stack.addOp('(')} expression SYM_PAREN_CLOSE{stack.removeP()} ) | ( (SYM_PLUS|SYM_MINUS)? var_cte );
+factor:  (SYM_PAREN_OPEN{stack.addOp('(')} expression SYM_PAREN_CLOSE{stack.removeP()} ) | ( (SYM_PLUS|SYM_MINUS{stack.O.append("*");stack.Types.append("int");stack.addConstant("-1")})? var_cte );
 
 logic_op: SYM_EQUAL| SYM_GRE_THAN | SYM_LOW_THAN| SYM_NOT_EQUAL | SYM_GRE_EQ | SYM_LOW_EQ;
  
@@ -81,12 +81,12 @@ callfunc: TYPE_ID {stack.enterCallFunc($TYPE_ID.text)}
 loop: TK_WHILE SYM_PAREN_OPEN expression{stack.enterCicle()} SYM_PAREN_CLOSE block{stack.exitCicle()};
  
 //SPECIAL FUNCTIONS
-openimg: TK_OPENIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)}  SYM_COMMA var_{stack.openimg($TYPE_ID.text)} SYM_PAREN_CLOSE ;
-saveimg: TK_SAVEIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)} SYM_COMMA var_{stack.saveImg($TYPE_ID.text)} SYM_PAREN_CLOSE;
-color_replace: TK_COLOR_REPLACE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL;
-grayscale: TK_GRAYSCALE SYM_PAREN_OPEN TYPE_ID SYM_PAREN_CLOSE SYM_SEMI_COL;
-color_filter: TK_COLOR_REPLACE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (TYPE_COLOR | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL;
-edgeDetection: TK_EDGE_DETECTION SYM_PAREN_OPEN TYPE_ID SYM_PAREN_CLOSE SYM_SEMI_COL;
+openimg: TK_OPENIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)}  SYM_COMMA TYPE_ID{stack.openimg($TYPE_ID.text)} SYM_PAREN_CLOSE ;
+saveimg: TK_SAVEIMG SYM_PAREN_OPEN CTE_TAG{stack.Types.append("tag")}{stack.addConstant($CTE_TAG.text)} SYM_COMMA TYPE_ID{stack.saveImg($TYPE_ID.text)} SYM_PAREN_CLOSE;
+color_replace: TK_COLOR_REPLACE SYM_PAREN_OPEN TYPE_ID SYM_COMMA expression SYM_COMMA expression SYM_PAREN_CLOSE{stack.colorReplace($TYPE_ID.text)} ;
+grayscale: TK_GRAYSCALE SYM_PAREN_OPEN TYPE_ID{stack.grayscale($TYPE_ID.text)} SYM_PAREN_CLOSE;
+color_filter: TK_COLOR_FILTER SYM_PAREN_OPEN TYPE_ID SYM_COMMA expression SYM_PAREN_CLOSE{stack.colorFilter($TYPE_ID.text)} ;
+edgeDetection: TK_EDGE_DETECTION SYM_PAREN_OPEN TYPE_ID SYM_PAREN_CLOSE{stack.edgeDetection($TYPE_ID.text)};
 scaleImg: TK_SCALE_IMAGE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (SYM_PLUS|SYM_MINUS)?(TYPE_FLOAT | TYPE_ID) SYM_COMMA (SYM_PLUS|SYM_MINUS)?(TYPE_FLOAT | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL;
 getColorPalette: TK_GET_COLOR_PALETTE SYM_PAREN_OPEN TYPE_ID SYM_COMMA (TYPE_FLOAT | TYPE_ID) SYM_PAREN_CLOSE SYM_SEMI_COL; 
 colorMatchImage: TK_COLOR_MATCH_IMAGE SYM_PAREN_OPEN TYPE_ID SYM_COMMA TYPE_ID SYM_PAREN_CLOSE SYM_SEMI_COL;
@@ -119,8 +119,8 @@ TK_VOID: 'void';
 TK_OPENIMG: 'openImg';
 TK_SAVEIMG: 'saveImg';
 TK_GRAYSCALE: 'grayscale';
-TK_COLOR_REPLACE: 'color_replace';
-TK_COLOR_FILTER: 'color_filter';
+TK_COLOR_REPLACE: 'colorReplace';
+TK_COLOR_FILTER: 'colorFilter';
 TK_EDGE_DETECTION: 'edgeDetection';
 TK_SCALE_IMAGE: 'scaleImg';
 TK_GET_COLOR_PALETTE: 'getColorPalette';

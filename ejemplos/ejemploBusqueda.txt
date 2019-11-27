@@ -1,0 +1,22 @@
+
+func main(){  
+    define int x[5], y,i=0;
+    define bool encontrado = False;
+    x[0] = 1;
+    x[1] = 2;
+    x[2] = 3;
+    x[3] = 4;
+    x[4] = 5;
+    print("Introducir el valor a buscar");
+    read(y);
+    while(i<5){
+        if(y==x[i]){
+            print("Encontrado en la posicion: ",i);
+            encontrado = True;
+        }
+        i=i+1;
+    }
+    if(encontrado == False){
+        print("Valor no encontrado");
+    }
+}

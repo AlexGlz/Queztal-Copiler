@@ -79,7 +79,8 @@ class NamesTable():
             self.dimensions = []
             self.actualR = 1
             self.varSize = 1
-            
+            print(self.globalsT,"AQUIII")
+            print(Memory.Directions)
             return True
 
     #Identifica el contexto actual de la creación de variables, posteriormente guarda la variable como local

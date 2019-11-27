@@ -1,9 +1,11 @@
+define color c[200][200];
+
 
 func main(){  
-    define int x[5][5],y,z[10];
-    define color c;
-    define int a;
-    y = 0;
-    y = y +1;
-    read(y);
+    
+   define int x=1;
+   print(-x);
+   openImg("media/imagen6.png",c);
+   edgeDetection(c);
+   saveImg("resultado.jpg",c);
 }

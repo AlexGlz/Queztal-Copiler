@@ -323,13 +323,12 @@ class Stack:
 
     ##Funcion para verificar si no se está una función dimensionada como tal
     def checkVarDims(self,varName):
-        print("ENTRE");
-        print("CHECK:",varName, len(namesTable.actualT[varName]["dim"]))
         if(len(namesTable.actualT[varName]["dim"]) != 0):
             raise Exception(f"[{varName}] is an Array")
 
     ##Inicializar el acceso a una variable dimensionada
     def initDimVar(self,varName):
+        self.O.append("(")#Agregar tope a la pila de operadores
         listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
         if(len(listaDim)==0): #Verificar que la variable sea dimensionada
             raise Exception(f"Variable [{varName}] is not an array")
@@ -339,6 +338,7 @@ class Stack:
 
     ##Saliendo de la variable dimensionada
     def exitDimVar(self,varName):
+        self.O.pop()#Eliminar el tope de la pila de operadores
         dimCount = len(namesTable.actualT[varName]["dim"]) #lista de dimensiones de la variable
         #Verificar que las dimensiones accedidas no sean menores a las definidas en la variable
         if(self.Dims[-1][1] != dimCount):
@@ -350,6 +350,7 @@ class Stack:
 
     ##Al detectar el acceso a un índice
     def dimEnter(self,varName):
+       
         #Agrega la dimensión a la pila de dimesiones
         if(len(self.Dims)>0):
             front = self.Dims[-1] #Front guarda la dimensión agregada más recientemente ##PENDIENTE: CHECAR SI SE REPITE EL NOMBRE ARREGLO DENTRO DE SÍ MISMO X[X[]][]
@@ -412,12 +413,9 @@ class Stack:
         if(frontDim==len(listaDim)):
             aux = self.Opd.pop() #Valor del índice
             indexType = self.Types.pop() #obtener el típo del índice
-            if(indexType != "int"): raise Exception("Index must be int")
+            if(indexType != "int"): raise Exception(f"Index must be int, given [{indexType}]")
             T = Memory.assignMemory("Temp","int",1)
             
-
-            ##POR EL MOMENTO LA DIRECCION SE AGREGA DIRECTAMENTE AL CUADRUPLO, HAY QUE GUARDARLA EN UNA CTE Y PASARLE LA DIRECCION
-            #print("+",aux1,namesTable.actualT[frontName]["dir"],T)
             ##Generar u obtener dirección de la constante de la dirección inicial del arreglo
             addressValue = namesTable.actualT[frontName]["dir"]
             self.Types.append("int")
@@ -432,13 +430,25 @@ class Stack:
         #print("VER",self.Opd.pop(),"1",limSup)
 
     ##Código para funciones especiales
+
+    #Función que retorna el registro de la tabla de variables de la variable dada. Además confirma si existe
+    def getVarData(self,varName):
+        if(varName in namesTable.actualT):
+            varData = namesTable.actualT[varName]
+        elif(varName in namesTable.globalsT):
+            varData = namesTable.globalsT[varName]
+        else:
+            raise Exception(f"Variable [{varName}] is not defined")
+        return varData
+
     def openimg(self,varName):
         if(True): 
             tagType = self.Types.pop()
             tagAdd = self.Opd.pop()
-            vartype = namesTable.actualT[varName]["type"];
-            varDims = namesTable.actualT[varName]["dim"];
-            varAdd = namesTable.actualT[varName]["dir"]
+            varData = self.getVarData(varName)
+            vartype = varData["type"]
+            varDims = varData["dim"]
+            varAdd = varData["dir"]
             if(vartype!="color"):
                 raise Exception(f"Expected type [color] but [{vartype}] were given")
             if(len(varDims)!=2):
@@ -453,9 +463,10 @@ class Stack:
     def saveImg(self,varName):
         tagType = self.Types.pop()
         tagAdd = self.Opd.pop()
-        vartype = namesTable.actualT[varName]["type"];
-        varDims = namesTable.actualT[varName]["dim"];
-        varAdd = namesTable.actualT[varName]["dir"]
+        varData = self.getVarData(varName)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
         if(vartype!="color"):
             raise Exception(f"Expected type [color] but [{vartype}] were given")
         if(len(varDims)!=2):
@@ -465,9 +476,78 @@ class Stack:
         self.Quads.append(Quad("saveimgData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
         self.QuadCounter += 2;
 
+    def colorReplace(self,image):
+        targetColor = self.Opd.pop()
+        targetColorType = self.Types.pop();
+        actualColor = self.Opd.pop()
+        actualColorType = self.Types.pop()
+        if(actualColorType != "color"):
+            raise Exception(f"In function [colorReplace], parameter [2], expected typge [color] but [{actualColorType}] were given")
+        if(targetColorType != "color"):
+            raise Exception(f"In function [colorReplace], parameter [3], expected typge [color] but [{targetColorType}] were given")
+        varData = self.getVarData(image)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        if(vartype!="color"):
+            raise Exception(f"In function [colorReplace], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [colorReplace], [2] dimentions of variable [{image}] are needed but it has [{len(varDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("colorReplace",actualColor,targetColor,varAdd))
+        self.Quads.append(Quad("colorReplaceData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
+        self.QuadCounter += 2;
+
+    def grayscale(self,image):
+        varData = self.getVarData(image)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        if(vartype!="color"):
+            raise Exception(f"In function [grayscale], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [grayscale], [2] dimentions of variable [{image}] are needed but it has [{len(varDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("grayscale",varDims[0]["ls"]+1,varDims[1]["ls"]+1,varAdd))
+        self.QuadCounter += 1
+
+    def colorFilter(self,image):
+        varData = self.getVarData(image)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        keepColor = self.Opd.pop()
+        keepColorType = self.Types.pop()
+        if(keepColorType!="color"):
+            raise Exception("In function [color filter], parameter #[2], expected type [color] but [{keepColorType}] were given")
+        if(vartype!="color"):
+            raise Exception(f"In function [colorFilter], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [colorFilter], [2] dimentions of variable [{image}] are needed but it has [{len(varDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("colorFilter",keepColor,None,varAdd))
+        self.Quads.append(Quad("colorFilterData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
+        self.QuadCounter += 2
+
+    def edgeDetection(self,image):
+        varData = self.getVarData(image)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        if(vartype!="color"):
+            raise Exception(f"In function [edgeDetection], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [edgeDetection], [2] dimentions of variable [{image}] are needed but it has [{len(varDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("edgeDetection",varDims[0]["ls"]+1,varDims[1]["ls"]+1,varAdd))
+        self.QuadCounter += 1
+
     def checkReturn(self,ctx):
         functionName = ctx.getChild(0).getChild(0).getText()
         functionType = namesTable.functionsT[functionName]["type"]
+       
+        
+
         if(functionType == "void"):
             raise Exception(f"Function [{functionName}] can not be used in an expression because its a void function");
 
@@ -482,8 +562,12 @@ class Stack:
         #print(self.Dims)
         #print(namesTable.globalsT)
         print(namesTable.constantsT)
-
+        namesTable.globalsT["vars"] = self.countVarByTypeScope("Global") #Obtener el conteo de memoria global
+        
         virtualMachine = VirtualMachine(self.Quads,tables)
+
+        #print(virtualMachine.virtualMemory.vMemory)
+
         virtualMachine.run()
         
         #print(virtualMachine.virtualMemory.vMemory)

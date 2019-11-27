@@ -2,7 +2,7 @@ from MemoryManager import *
 from SpecialFunctions import *
 
 class VirtualMemory:
-    def __init__(self,globals,constants):
+    def __init__(self,globals,constants,MemSize):
         self.vMemory = {
             "Global": {
                 "int":[],
@@ -20,8 +20,18 @@ class VirtualMemory:
             },
             "Stack":[]    
         }
-        for (_,data) in globals.items():
-            self.vMemory["Global"][data["type"]].append(None)
+
+        self.MemSize = MemSize
+
+        self.Reference= dict()
+        scopes = ["Global","Local","Temp","Constant"]
+        types = ["int","float","bool","color","tag"]
+        for scope in scopes:
+            for type in types:
+                self.Reference[MemSize*counter] = [scope,type]
+                counter+=1
+        for (tipo,size) in globals["vars"].items():   
+            self.vMemory["Global"][tipo]= [None] * size
 
         for (cte,data) in constants.items():
             self.vMemory["Constant"][data["type"]].append(cte)
@@ -252,15 +262,32 @@ class VirtualMachine():
                 arrayX = int(nextQuad.OperandoI)
                 arrayY = int(nextQuad.OperandoD)
                 saveImg(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
-            elif(operador=="grayscale"):
-                nextQuad = self.Quads[self.QuadCounter+1]
-                self.QuadCounter+=1
-                imagePath = self.virtualMemory.getValue(izq)
+            elif(operador=="colorReplace"):
                 arrayAdd = resultado
-                arrayX = int(nextQuad.OperandoI)
-                arrayY = int(nextQuad.OperandoD)
-                grayscale(imagePath,arrayX,arrayY,arrayAdd,self.virtualMemory)
-                
+                colorReplaceData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+=1
+                colorToReplace = self.virtualMemory.getValue(izq)
+                replacementColor = self.virtualMemory.getValue(der) 
+                arrayX = int(colorReplaceData.OperandoI)
+                arrayY = int(colorReplaceData.OperandoD)
+                colorReplace(colorToReplace,replacementColor,arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="grayscale"):
+                arrayAdd = resultado
+                arrayX = int(izq)
+                arrayY = int(der)
+                grayscale(arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="colorFilter"):
+                colorFilterData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+1
+                mantainColor = self.virtualMemory.getValue(izq)
+                arrayX = int(colorFilterData.OperandoI)
+                arrayY = int(colorFilterData.OperandoD)
+                colorFilter(mantainColor,arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="edgeDetection"):
+                arrayAdd = resultado
+                arrayX = int(izq)
+                arrayY = int(der)
+                edgeDetection(arrayX,arrayY,arrayAdd,self.virtualMemory)
             #Avanzar el cúadruplo
             self.QuadCounter += 1
     
