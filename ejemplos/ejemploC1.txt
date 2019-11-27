@@ -1,11 +1,14 @@
 define color c[200][200];
+define color palette[9];
 
 
 func main(){  
-    
-   define int x=1;
-   print(-x);
+define int x=0;
    openImg("media/imagen6.png",c);
-   edgeDetection(c);
-   saveImg("resultado.jpg",c);
+   encodeSteganography(c,"Esto es un mensaje muy encriptado hay bau");
+    print(c[0][0]);
+    saveImg("secreto.jpg",c);
+    //openImg("secreto.jpg",c);
+    print(c[0][0]);
+   decodeSteganography(c);
 }

@@ -1,9 +1,23 @@
 from skimage import io
 from skimage.filters import roberts
+from skimage.transform import resize
+from skimage import exposure
+from skimage.exposure import match_histograms
 import numpy as np
 import threading
 import queue
 import time
+import colorgram
+from Steganography import *
+from PIL import Image
+
+
+import imageio.core.util
+
+def ignore_warnings(*args, **kwargs):
+    pass
+
+imageio.core.util._precision_warn = ignore_warnings
 
 #Función que recibe un color rgb y regresa para cada compnente (red,green,blue) un limite superior e inferior
 #que constituye +-55 de su valor actual
@@ -197,17 +211,24 @@ def getImageHeight(urlPath):
 #Ej. define color birdPhoto[100][100];
 #birdPhoto = openImg(“C:\Users\lizzi\Desktop\Bird.JPG”);
 def openImg(urlPath,dataX,dataY,baseMem,vm):
-    
     imageWidth = getImageWidth(urlPath)
     imageHeight = getImageHeight(urlPath)
-    inputImage = io.imread(urlPath)
+    inputImaget = Image.open(urlPath, 'r') 
+    inputImage = Image.new("RGB", inputImaget.size, (255,255,255))
+    inputImage.paste(inputImaget,inputImaget)
+
+    inputImage = np.array(inputImage.getdata()).reshape(inputImage.size[0], inputImage.size[1], 3)
+    imageWidth = inputImage.shape[1]
+    imageHeight = inputImage.shape[0]
     rangeX = range(dataX)
     rangeY = range(dataY)
+    print(imageHeight)
     for row in rangeX:
         for cell in rangeY:  
             if(row >imageHeight -1 or cell > imageWidth-1):
                 color = "#ffffff"   
             else:
+                #print(row,cell)
                 color = rgbToColor(inputImage[row][cell])
             position = baseMem+row*dataY+cell
             vm.setValue(color,position)    
@@ -225,7 +246,7 @@ def saveImg(urlPath,dataX,dataY,baseMem,vm):
             position = baseMem+row*dataY+cell
             color = vm.getValue(position)
             image[-1].append(colorToRGB(color))  
-    io.imsave(urlPath, np.array(image))
+    io.imsave(urlPath,np.array(image))
     print(f"Image saved as : {urlPath}")
 
 #Recibe una matriz de colores y la convierte la imagen a escala de grises.
@@ -283,4 +304,109 @@ def edgeDetection(dataX,dataY,baseMem,vm):
             newColor = rgbToColor([pixel,pixel,pixel])
             vm.setValue(newColor,position)
 
-            
+def scaleImg(urlPath,hScale,wScale,dataX,dataY,baseMem,vm):
+    image = []
+    rangeX = range(dataX)
+    rangeY = range(dataY)
+    #Obtener los colores de la memoria y convertirlos a formato RGB
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = baseMem+row*dataY+cell
+            color = vm.getValue(position)
+            color = colorToRGB(color)
+            image[-1].append(color)
+    image = np.array(image)
+    image = resize(image,(int(dataX*abs(hScale)),int(dataY*abs(wScale))),anti_aliasing=True)
+    if(hScale < 0):
+        image = np.flipud(image)
+    if(wScale < 0):
+        image = np.fliplr(image)
+    io.imsave(urlPath,image)
+    print(f"Image saved as : {urlPath}")
+    
+def getColorPallete(paletteSize,palleteAdd,dataX,dataY,baseMem,vm):
+    #generar archivo temporal para la librería de color pallete 
+    image = []
+    rangeX = range(dataX)
+    rangeY = range(dataY)
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = baseMem+row*dataY+cell
+            color = vm.getValue(position)
+            image[-1].append(colorToRGB(color))  
+    io.imsave("temp.jpg",np.array(image))
+    colors = colorgram.extract("temp.jpg",paletteSize)
+    counter = 0
+    for color  in colors:
+        vm.setValue(rgbToColor(color.rgb),palleteAdd+counter)
+        counter+=1;
+
+def colorMatchImage(imageH,imageW,imageBaseAdd,matchH,matchW,matchBaseAdd,vm):
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = imageBaseAdd+row*imageW+cell
+            color = vm.getValue(position)
+            image[-1].append(colorToRGB(color))  
+    image = np.array(image)
+
+    match = []
+    rangeX = range(matchH)
+    rangeY = range(matchW)
+    for row in rangeX:
+        match.append([])
+        for cell in rangeY:
+            position = matchBaseAdd+row*matchW+cell
+            color = vm.getValue(position)
+            match[-1].append(colorToRGB(color))  
+    match = np.array(match)
+    
+    matched = match_histograms(image, match, multichannel=True)
+
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+        for cell in rangeY:  
+            color = rgbToColor(matched[row][cell])
+            position = imageBaseAdd+row*imageW+cell
+            vm.setValue(color,position)
+
+def encodeSteganography(tag,imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = imageBaseAdd+row*imageW+cell
+            color = vm.getValue(position)
+            image[-1].append(colorToRGB(color))  
+    data = encode(image,tag)
+    for row in rangeX:
+        for cell in rangeY:
+            position = imageBaseAdd+row*imageW+cell
+            color = rgbToColor(data[row][cell])
+            #print(color!=vm.getValue(position))
+            vm.setValue(color,position)
+
+def decodeSteganography(imageH,imageW,imageBaseAdd,vm):
+    #generar archivo temporal para la librería de steganography
+    image = []
+    rangeX = range(imageH)
+    rangeY = range(imageW)
+    for row in rangeX:
+        image.append([])
+        for cell in rangeY:
+            position = imageBaseAdd+row*imageW+cell
+            color = vm.getValue(position)
+            image[-1].append(colorToRGB(color))  
+    
+    message = decode(image)
+    print("The encryped message is: ", message)
+

@@ -1,4 +1,3 @@
-from MemoryManager import *
 from SpecialFunctions import *
 
 class VirtualMemory:
@@ -20,9 +19,8 @@ class VirtualMemory:
             },
             "Stack":[]    
         }
-
+        counter = 1
         self.MemSize = MemSize
-
         self.Reference= dict()
         scopes = ["Global","Local","Temp","Constant"]
         types = ["int","float","bool","color","tag"]
@@ -41,15 +39,15 @@ class VirtualMemory:
         if(str(address)[0] == "("):
             address = address[1:-1]
             return self.getLocation(int(address))
-        defaultAdd = address - (address%Memory.MemSize)
-        return Memory.Reference[defaultAdd]
+        defaultAdd = address - (address%self.MemSize)
+        return self.Reference[defaultAdd]
 
     def getValue(self,address):
         #En caso de que se acceda a un apuntador ejemplo: (5000)
         if(str(address)[0]=="("):
             address = address[1:-1]#remover los paréntesis
             address = self.getValue(int(address)) #La dirección ahora será el valor del apuntador
-        index = int(address)%Memory.MemSize
+        index = int(address)%self.MemSize
         location = self.getLocation(address)
         scope = location[0]
         type = location[1]
@@ -83,7 +81,7 @@ class VirtualMemory:
             address = self.getValue(int(address)) #La dirección ahora será el valor del apuntador
         else:
             address = int(address)
-        index = address%Memory.MemSize
+        index = address%self.MemSize
         location = self.getLocation(address)
         scope = location[0]
         type = location[1]
@@ -94,7 +92,7 @@ class VirtualMemory:
 
     
     def initializeMemBlock(self,size):
-        if(size>Memory.MemSize):
+        if(size>self.MemSize):
             raise Exception("Stack Overflow")
         return [None]*size
 
@@ -110,14 +108,13 @@ class VirtualMemory:
 
 class VirtualMachine():
     
-
-    def __init__(self,quads,tables):
+    def __init__(self,quads,tables,MemSize):
         ##LISTAS DE OPERADORES DEL LEGUAJE
         self.aritmethicOP = ["+","-","*","/"]
         self.logicOp = ["==","!=",">",">=","<","<=","||","&&"]
         self.gotos = ["GOTOF","GOTO","GOTOV","GOSUB"]
         ##Instanciar Memoria virtual
-        self.virtualMemory = VirtualMemory(tables["globals"],tables["constants"])
+        self.virtualMemory = VirtualMemory(tables["globals"],tables["constants"],MemSize)
         ##Manejo de cuádruplos
         self.Quads = quads           
         self.QuadCounter = 0
@@ -288,6 +285,57 @@ class VirtualMachine():
                 arrayX = int(izq)
                 arrayY = int(der)
                 edgeDetection(arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="scaleImg"):
+                scaleImgData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+1
+                hScale = self.virtualMemory.getValue(izq)
+                wScale = self.virtualMemory.getValue(der)
+                url = self.virtualMemory.getValue(scaleImgData.Resultado)
+                arrayAdd = resultado
+                arrayX = int(scaleImgData.OperandoI)
+                arrayY = int(scaleImgData.OperandoD)
+                
+                scaleImg(url,hScale,wScale,arrayX,arrayY,arrayAdd,self.virtualMemory)
+            elif(operador=="getColorPalette"):
+                getColorPaletteData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+1
+                paletteSize = self.virtualMemory.getValue(izq)
+                paletteArrSize = int(der)
+                if(paletteSize<=0):
+                    raise Exception("In function [getColorPalette], the number of colors to extract must be grater than 0")
+                if(paletteSize>paletteArrSize):
+                    raise Exception("In function [getColorPalette], the number of colors to extract cant exceed pallete array size")
+                paletteArrAdd = resultado
+                imageHeight = int(getColorPaletteData.OperandoI)
+                imageWidth = int(getColorPaletteData.OperandoD)
+                imageBaseAdd = getColorPaletteData.Resultado
+                getColorPallete(paletteSize,paletteArrAdd,imageHeight,imageWidth,imageBaseAdd,self.virtualMemory)
+            elif(operador=="colorMatchImage"):
+                colorMatchImageData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+1
+                #Datos de la imagen base
+                imageH = izq
+                imageW = der
+                imageBaseAdd = resultado
+                #Datos de la imagen que se usará para hacer match
+                matchH = colorMatchImageData.OperandoI
+                matchW = colorMatchImageData.OperandoD
+                matchBaseAdd = colorMatchImageData.Resultado
+                
+                colorMatchImage(imageH,imageW,imageBaseAdd,matchH,matchW,matchBaseAdd,self.virtualMemory)
+            elif(operador=="encodeSteganography"):
+                encodeSteganographyData = self.Quads[self.QuadCounter+1]
+                self.QuadCounter+1
+                tag = self.virtualMemory.getValue(izq)
+                arrAdd = resultado
+                imageHeight = int(encodeSteganographyData.OperandoI)
+                imageWidth = int(encodeSteganographyData.OperandoD)
+                encodeSteganography(tag,imageHeight,imageWidth,arrAdd,self.virtualMemory)
+            elif(operador=="decodeStenography"):
+                imageBaseAdd = resultado
+                imageHeight = int(izq)
+                imageWidth = int(der)
+                decodeSteganography(imageHeight,imageHeight,imageBaseAdd,self.virtualMemory)
             #Avanzar el cúadruplo
             self.QuadCounter += 1
     

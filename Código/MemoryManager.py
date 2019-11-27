@@ -45,7 +45,7 @@ class Memory:
     for scope in scopes:
         Directions[scope] = dict()
         for type in types:
-            Reference[MemSize*counter] = [scope,type]
+            #Reference[MemSize*counter] = [scope,type]
             Directions[scope][type] = {"dir":MemSize*counter,"declared":0}
             counter+=1
 

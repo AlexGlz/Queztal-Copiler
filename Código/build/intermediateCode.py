@@ -275,7 +275,6 @@ class Stack:
         namesTable.varCnt = 0
         Memory.resetMemory("Local")
         Memory.resetMemory("Temp")
-        print(namesTable.actualT)
         ##ENDPROC SE GENERA EN FUNCIONES QUE NO SON main
         
         if(namesTable.actualFuncName != "main"):
@@ -329,7 +328,12 @@ class Stack:
     ##Inicializar el acceso a una variable dimensionada
     def initDimVar(self,varName):
         self.O.append("(")#Agregar tope a la pila de operadores
-        listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
+        if(varName in namesTable.actualT):
+            listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
+        elif(varName in namesTable.globalsT):
+            listaDim = namesTable.globalsT[varName]["dim"] #lista de dimensiones de la variable
+        else:
+            raise Exception(f"Variable [{varName}] is not defined")
         if(len(listaDim)==0): #Verificar que la variable sea dimensionada
             raise Exception(f"Variable [{varName}] is not an array")
         else:
@@ -339,7 +343,13 @@ class Stack:
     ##Saliendo de la variable dimensionada
     def exitDimVar(self,varName):
         self.O.pop()#Eliminar el tope de la pila de operadores
-        dimCount = len(namesTable.actualT[varName]["dim"]) #lista de dimensiones de la variable
+        if(varName in namesTable.actualT):
+            dimCount = len(namesTable.actualT[varName]["dim"]) #lista de dimensiones de la variable
+        elif(varName in namesTable.globalsT):
+            dimCount = len(namesTable.globalsT[varName]["dim"]) #lista de dimensiones de la variable
+        else:
+            raise Exception(f"Variable [{varName}] is not defined")
+       
         #Verificar que las dimensiones accedidas no sean menores a las definidas en la variable
         if(self.Dims[-1][1] != dimCount):
             raise Exception(f"Variable [{varName}]: [{self.Dims[-1][1] }] dimentions accessed but [{dimCount}] were expected.")
@@ -366,7 +376,12 @@ class Stack:
         frontName = self.Dims[-1][0]
         frontDim = self.Dims[-1][1] #Número de la dimensión actual
 
-        listaDim = namesTable.actualT[frontName]["dim"]
+        if(varName in namesTable.actualT):
+            listaDim = namesTable.actualT[varName]["dim"] #lista de dimensiones de la variable
+        elif(varName in namesTable.globalsT):
+            listaDim = namesTable.globalsT[varName]["dim"] #lista de dimensiones de la variable
+        else:
+            raise Exception(f"Variable [{varName}] is not defined")
 
         if(frontDim > len(listaDim)): #Checa que el número de dimensiones no exceda al número de dimensiones dadas en la definición de la variable
             raise Exception("Variable '" + frontName + "' with "+ str(frontDim) + " Dimensions not defined, " + str(len(listaDim)) + " where expected") #display exception
@@ -417,7 +432,13 @@ class Stack:
             T = Memory.assignMemory("Temp","int",1)
             
             ##Generar u obtener dirección de la constante de la dirección inicial del arreglo
-            addressValue = namesTable.actualT[frontName]["dir"]
+            if(frontName in namesTable.actualT):
+                addressValue = namesTable.actualT[frontName]["dir"] #lista de dimensiones de la variable
+            elif(frontName in namesTable.globalsT):
+                addressValue = namesTable.globalsT[frontName]["dir"] #lista de dimensiones de la variable
+            else:
+                raise Exception(f"Variable [{varName}] is not defined")            
+         
             self.Types.append("int")
             self.addConstant(addressValue)
             self.Types.pop()
@@ -496,7 +517,7 @@ class Stack:
         ##Generar cuádruplos de la función
         self.Quads.append(Quad("colorReplace",actualColor,targetColor,varAdd))
         self.Quads.append(Quad("colorReplaceData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,None))
-        self.QuadCounter += 2;
+        self.QuadCounter += 2
 
     def grayscale(self,image):
         varData = self.getVarData(image)
@@ -541,6 +562,105 @@ class Stack:
         ##Generar cuádruplos de la función
         self.Quads.append(Quad("edgeDetection",varDims[0]["ls"]+1,varDims[1]["ls"]+1,varAdd))
         self.QuadCounter += 1
+    def scaleImg(self,image):
+        varData = self.getVarData(image)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        if(vartype!="color"):
+            raise Exception(f"In function [scaleImg], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [scaleImg], [2] dimentions of variable [{image}] are needed but it has [{len(varDims)}]")
+        widthScale = self.Opd.pop()
+        widthScaleType = self.Types.pop()
+        hScale = self.Opd.pop()
+        hScaleType = self.Types.pop()
+        url = self.Opd.pop()
+        urlType = self.Types.pop()
+        if(hScaleType != "int" and hScaleType != "float"): 
+            raise Exception(f"In function [scaleImg], parameter [2], expected type [int or float] but [{hScaleType}] were given")
+        if(widthScaleType != "int" and widthScaleType != "float"): 
+            raise Exception(f"In function [scaleImg], parameter [3], expected type [int or float] but [{widthScaleType}] were given")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("scaleImg",hScale,widthScale,varAdd))
+        self.Quads.append(Quad("scaleImgData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,url))
+        self.QuadCounter += 2
+    
+    def getColorPalette(self,pallete):
+        palleteNumber = self.Opd.pop()
+        palleteNumberType = self.Types.pop()
+        arrayName = self.Opd.pop()
+        varData = self.getVarData(arrayName)
+        vartype = varData["type"]
+        varDims = varData["dim"]
+        varAdd = varData["dir"]
+        paletteData = self.getVarData(pallete)
+        paletteType = paletteData["type"]
+        paletteDims = paletteData["dim"]
+        paletteAdd = paletteData["dir"]
+        if(palleteNumberType!="int"):
+            raise Exception(f"In function [getColorPalette], parameter [3], expected type [int] but [{palleteNumberType}] were given")
+        if(vartype!="color"):
+            raise Exception(f"In function [getColorPalette], parameter [1], expected type [color] but [{vartype}] were given")
+        if(len(varDims)!=2):
+            raise Exception(f"In function [getColorPalette], [2] dimentions of variable [{arrayName}] are needed but it has [{len(varDims)}]")
+        if(paletteType!="color"):
+            raise Exception(f"In function [getColorPalette], parameter [2], expected type [color] but [{paletteType}] were given")
+        if(len(paletteDims)!=1):
+            raise Exception(f"In function [getColorPalette], [2] dimentions of variable [{pallete}] are needed but it has [{len(paletteDims)}]")
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("getColorPalette",palleteNumber,paletteDims[0]["ls"]+1,paletteAdd))
+        self.Quads.append(Quad("getColorPaletteData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,varAdd))
+        
+    
+    def colorMatchImage(self, matchImage):
+        matchImageData = self.getVarData(matchImage)
+        matchImageType = matchImageData["type"]
+        matchImageDims = matchImageData["dim"]
+        matchImageAdd = matchImageData["dir"]
+        self.validateData("colorMatchImage",matchImage,matchImageDims,matchImageType,2)
+        image = self.Opd.pop()
+        imageData = self.getVarData(image)
+        imageType = imageData["type"]
+        imageDims = imageData["dim"]
+        imageAdd = imageData["dir"]
+        self.validateData("colorMatchImage",image,imageDims,imageType,1)
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("colorMatchImage",imageDims[0]["ls"]+1,imageDims[1]["ls"]+1,imageAdd))
+        self.Quads.append(Quad("colorMatchImageData",matchImageDims[0]["ls"]+1,matchImageDims[1]["ls"]+1,matchImageAdd))
+        self.QuadCounter += 2
+    
+    def encodeSt(self,image):
+        tagType = self.Types.pop()
+        tagAdd = self.Opd.pop()
+        imageData = self.getVarData(image)
+        imageType = imageData["type"]
+        imageDims = imageData["dim"]
+        imageAdd = imageData["dir"]
+        self.validateData("encodeSt",image,imageDims,imageType,1)
+        ##Generar cuádruplos de la función
+        self.Quads.append(Quad("encodeSteganography",tagAdd,None,imageAdd))
+        self.Quads.append(Quad("encodeSteganographyData",imageDims[0]["ls"]+1,imageDims[1]["ls"]+1,None))
+        self.QuadCounter += 2
+
+    def decodeSt(self,image):
+        imageData = self.getVarData(image)
+        imageType = imageData["type"]
+        imageDims = imageData["dim"]
+        imageAdd = imageData["dir"]
+        self.validateData("encodeSt",image,imageDims,imageType,1)
+        ##Generar cuádruplos de la función 
+        self.Quads.append(Quad("decodeStenography",imageDims[0]["ls"]+1,imageDims[1]["ls"]+1,imageAdd))
+        self.QuadCounter += 1
+
+    def validateData(self, function, varname, dims, varType, paramNum):
+        if(varType!="color"):
+            raise Exception(f"In function [{function}], parameter [{paramNum}], expected type [color] but [{varType}] were given")
+        if(len(dims)!=2):
+            raise Exception(f"In function [{function}], [{paramNum}] dimentions of variable [{varname}] are needed but it has [{len(dims)}]")
+        
+
+    ##TERMINA CODIGO DE FUNCIONES ESPECIALES
 
     def checkReturn(self,ctx):
         functionName = ctx.getChild(0).getChild(0).getText()
@@ -564,7 +684,7 @@ class Stack:
         print(namesTable.constantsT)
         namesTable.globalsT["vars"] = self.countVarByTypeScope("Global") #Obtener el conteo de memoria global
         
-        virtualMachine = VirtualMachine(self.Quads,tables)
+        virtualMachine = VirtualMachine(self.Quads,tables,Memory.MemSize)
 
         #print(virtualMachine.virtualMemory.vMemory)
 
