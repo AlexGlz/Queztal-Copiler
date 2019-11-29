@@ -8,7 +8,6 @@ class Memory:
     for scope in scopes:
         Directions[scope] = dict()
         for type in types:
-            
             Directions[scope][type] = {"dir":MemSize*counter,"declared":0}
             counter+=1
 

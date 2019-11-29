@@ -7,7 +7,8 @@ define int x=0;
     openImg("media/image1.png",c);
     grayscale(c);
     saveImg("grayscale.png",c);
-    
+
+      
     openImg("media/image1.png",c);
     colorReplace(c,#000000,#ffffff);
     saveImg("replaced.png",c);
@@ -38,4 +39,5 @@ define int x=0;
 
     openImg("encriptado.png",c);
     decodeSteganography(c);  
+  
 }

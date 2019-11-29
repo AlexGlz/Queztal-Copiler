@@ -1,11 +1,28 @@
-define float x,y,z;
-define color r;
+define color palette[10];
+define color imagen[200][200];
+define color result[50][100];
 
-func int loquesea(int n, int m){
-    define float hola, adios, gg, bau;
-    x = y+z;
-}
 
 func main(){
-    loquesea(1,2);
+    define int size, i=0,j=0,counter=0;
+    define int segment;
+    print("Numero de colores a generar: ");
+    read(size);
+    openImg("media/image1.png",imagen);
+    getColorPalette(imagen,palette,size);
+    segment = 100/size;
+    while(counter<size){
+        j=0;
+        while(j<segment){
+            i=0;
+            while(i<50){
+                result[i][j+segment*counter] = palette[counter];
+                i=i+1;
+            }
+            j=j+1;
+        }
+       counter=counter+1;
+    
+    }
+    saveImg("paleta.png",result);
 }

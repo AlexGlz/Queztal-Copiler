@@ -57,6 +57,8 @@ class VirtualMemory:
         else:
             valor=self.vMemory["Stack"][-1][scope][type][index] #El -1 permite acceder al último elemento del stack
         if(valor==None):
+            if(type == "color"):
+                return "#FFFFFF"
             raise Exception("Accessed to a variable or index without defining a value before")
         if(type == "int"):
             return int(valor)
