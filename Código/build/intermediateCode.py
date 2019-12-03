@@ -623,7 +623,7 @@ class Stack:
         ##Generar cuádruplos de la función
         self.Quads.append(Quad("getColorPalette",palleteNumber,paletteDims[0]["ls"]+1,paletteAdd))
         self.Quads.append(Quad("getColorPaletteData",varDims[0]["ls"]+1,varDims[1]["ls"]+1,varAdd))
-        
+        self.QuadCounter += 2
     
     def colorMatchImage(self, matchImage):
         matchImageData = self.getVarData(matchImage)

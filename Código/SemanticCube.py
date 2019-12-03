@@ -8,7 +8,7 @@ class SemanticCube():
                 {   "+":"int",
                     "-":"int",
                     "*":"int",
-                    "/":"float",
+                    "/":"int",
                     ">":"bool",
                     "<":"bool",
                     ">=":"bool",

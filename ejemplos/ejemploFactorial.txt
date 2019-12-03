@@ -25,6 +25,9 @@ func int iterativeFactorial(int n)
 }
 
 func main(){
-    print(factorial(5));
-    print(iterativeFactorial(5));
+    define int num;
+    print("Calcular factorial de: ");
+    read(num);
+    print("Recursivo:",factorial(num));
+    print("Iterativo:",iterativeFactorial(num));
 }

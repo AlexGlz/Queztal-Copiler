@@ -5,7 +5,7 @@ from build.QuetzalParser import QuetzalParser #Se importa el Parser generados
 from antlr4.error.ErrorListener import ErrorListener
 import sys
 
-sys.tracebacklimit = 100
+sys.tracebacklimit = 0
 
 class CustomErrorListener(ErrorListener):
 
